@@ -18,9 +18,9 @@ namespace Capstone.DAO
             connectionString = dbConnectionString;
         }
 
-        public Collection GetCollections(int collectionId)
+        public List<Collection> GetAllUserCollections(int userId)
         {
-            Collection collectionsFound = null;
+            List<Collection> userCollections = new List<Collection>();
 
             try
             {
@@ -29,13 +29,13 @@ namespace Capstone.DAO
                     conn.Open();
 
                     SqlCommand cmd = new SqlCommand("SELECT collection_id, user_id, name FROM collections WHERE user_id = @user_id", conn);
-                    cmd.Parameters.AddWithValue("@user_id", collectionId);
+                    cmd.Parameters.AddWithValue("@user_id", userId);
                     SqlDataReader reader = cmd.ExecuteReader();
-
-                    if (reader.Read())
+                    while (reader.Read())
                     {
-                        collectionsFound = GetCollectionFromReader(reader);
+                        userCollections.Add(GetCollectionFromReader(reader));
                     }
+
                 }
             }
             catch (SqlException)
@@ -43,7 +43,7 @@ namespace Capstone.DAO
                 throw;
             }
 
-            return collectionsFound;
+            return userCollections;
         }
 
         public Collection CreateCollection(int userId, string name)
@@ -68,7 +68,35 @@ namespace Capstone.DAO
                 throw;
             }
 
-            return GetCollections(newCollectionId);
+            return ReturnAddedCollection(newCollectionId);
+        }
+
+        public Collection ReturnAddedCollection(int collectionId)
+        {
+            Collection collectionsFound = null;
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand("SELECT collection_id, user_id, name FROM collections WHERE collection_id = @collection_id", conn);
+                    cmd.Parameters.AddWithValue("@collection_id", collectionId);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        collectionsFound = GetCollectionFromReader(reader);
+                    }
+                }
+            }
+            catch (SqlException)
+            {
+                throw;
+            }
+
+            return collectionsFound;
         }
 
         private Collection GetCollectionFromReader(SqlDataReader reader)
@@ -82,6 +110,5 @@ namespace Capstone.DAO
 
             return c;
         }
-
     }
 }
