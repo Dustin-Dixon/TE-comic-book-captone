@@ -32,6 +32,11 @@
         v-model="user.confirmPassword"
         required
       />
+      <label for="account-type">Select a plan:</label>
+      <select name="account-type" id="account-type" v-model="user.role" required>
+        <option value="standard">Standard</option>
+        <option value="premium">Premium</option>
+      </select>
       <router-link :to="{ name: 'login' }">Have an account?</router-link>
       <button class="btn btn-lg btn-primary btn-block" type="submit">
         Create Account
@@ -51,7 +56,7 @@ export default {
         username: '',
         password: '',
         confirmPassword: '',
-        role: 'user',
+        role: 'standard',
       },
       registrationErrors: false,
       registrationErrorMsg: 'There were problems registering this user.',
