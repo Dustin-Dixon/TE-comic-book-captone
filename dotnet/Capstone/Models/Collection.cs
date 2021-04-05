@@ -7,5 +7,8 @@ namespace Capstone.Models
 {
     public class Collection
     {
+        public int CollectionID { get; set; }
+        public int UserID { get; set; }
+        public string Name { get; set; }
     }
 }
