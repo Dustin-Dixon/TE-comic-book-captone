@@ -4,7 +4,7 @@ namespace Capstone.DAO
 {
     public interface ICollectionDAO
     {
-        Collection CreateCollection(string name);
+        Collection CreateCollection(int userId, string name);
         Collection GetCollections(int id);
     }
 }
