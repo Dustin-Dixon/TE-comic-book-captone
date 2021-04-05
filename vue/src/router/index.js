@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import MyCollections from '../views/MyCollections.vue'
 import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
 import Logout from '../views/Logout.vue'
@@ -25,6 +26,14 @@ const router = new Router({
       path: '/',
       name: 'home',
       component: Home,
+      meta: {
+        requiresAuth: false
+      }
+    },
+    {
+      path: '/my-collections',
+      name: 'my-collections',
+      component: MyCollections,
       meta: {
         requiresAuth: true
       }
