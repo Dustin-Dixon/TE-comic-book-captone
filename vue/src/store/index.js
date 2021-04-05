@@ -38,5 +38,10 @@ export default new Vuex.Store({
       state.user = {};
       axios.defaults.headers.common = {};
     }
+  },
+  getters: {
+    loggedIn(state) {
+      return state.token !== '';
+    }
   }
 })
