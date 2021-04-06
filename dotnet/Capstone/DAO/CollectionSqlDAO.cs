@@ -42,7 +42,6 @@ namespace Capstone.DAO
             {
                 throw;
             }
-
             return userCollections;
         }
 

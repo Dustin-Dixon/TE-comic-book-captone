@@ -62,6 +62,7 @@ SET IDENTITY_INSERT users OFF;
 SET IDENTITY_INSERT collections ON;
 
 INSERT INTO collections (collection_id, user_id, name) VALUES (1, 1, 'TestCollection');
+INSERT INTO collections (collection_id, user_id, name) VALUES (2, 1, 'TestMarvel');
 
 SET IDENTITY_INSERT collections OFF;
 
@@ -70,11 +71,13 @@ SET IDENTITY_INSERT collections OFF;
 SET IDENTITY_INSERT comics ON;
 
 INSERT INTO comics (comic_id, name, author, release_date) VALUES (1, 'Spiderman', 'Stan Lee', '1962-06-05');
-
+INSERT INTO comics (comic_id, name, author, release_date) VALUES (2, 'TestHero', 'Some Body', '2021-04-06');
 SET IDENTITY_INSERT comics OFF;
 
 --------Collections_comics Rows------------------------
 
 INSERT INTO collections_comics (collection_id, comic_id, quantity) VALUES (1, 1, 2);
+INSERT INTO collections_comics (collection_id, comic_id, quantity) VALUES (1, 2, 1);
+INSERT INTO collections_comics (collection_id, comic_id, quantity) VALUES (2, 2, 1);
 
 
