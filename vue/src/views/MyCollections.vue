@@ -22,7 +22,7 @@ export default {
   components: { CollectionList },
   data() {
     return {
-      collections: [{name: "a", id: 1}, {name: "b", id: 2}],
+      collections: [],
       error: "",
     };
   },
