@@ -54,11 +54,12 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("INSERT INTO collections (user_id, name) VALUES (@user_id, @name);SELECT SCOPE_IDENTITY()", conn);
+                    SqlCommand cmd = new SqlCommand("INSERT INTO collections (user_id, name)" +
+                                                    "VALUES (@user_id, @name);" +
+                                                    "SELECT SCOPE_IDENTITY()", conn);
                     cmd.Parameters.AddWithValue("@user_id", collection.UserID);
                     cmd.Parameters.AddWithValue("@name", collection.Name);
                     collection.CollectionID = Convert.ToInt32(cmd.ExecuteScalar());
-
                 }
             }
             catch (SqlException)

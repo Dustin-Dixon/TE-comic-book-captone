@@ -16,9 +16,61 @@ namespace Capstone.DAO
             connectionString = dbConnectionString;
         }
 
-        public ComicBook AddComicToCollection(int collectionId)
+        public void AddComicToCollection(int collectionId, ComicBook comicBook)
         {
-            throw new NotImplementedException();
+            try
+            {
+                AddComicToComicTable(comicBook);
+                AddComicToCollectionsComicsTable(collectionId, comicBook.ComicID);
+            }
+            catch (SqlException)
+            {
+                throw;
+            }
+        }
+
+        private void AddComicToComicTable(ComicBook comicBook)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand("INSERT INTO comics (name, author, release_date)" +
+                                                    "VALUES (@name, @author, @release_date;" +
+                                                    "SELECT SCOPE_IDENTITY()", conn);
+                    cmd.Parameters.AddWithValue("@name", comicBook.Name);
+                    cmd.Parameters.AddWithValue("@author", comicBook.Author);
+                    cmd.Parameters.AddWithValue("@release_date", comicBook.ReleaseDate);
+                    comicBook.ComicID = Convert.ToInt32(cmd.ExecuteScalar());
+                }
+            }
+            catch (SqlException)
+            {
+                throw;
+            }
+        }
+
+        private void AddComicToCollectionsComicsTable(int collectionId, int comicId)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand("INSERT INTO collections_comics (collection_id, comic_id, quantity)" +
+                                                    "VALUES(@collection_id, @comic_id, @quantity)", conn);
+                    cmd.Parameters.AddWithValue("@collection_id", collectionId);
+                    cmd.Parameters.AddWithValue("@comic_id", comicId);
+                    cmd.Parameters.AddWithValue("@quantity", 1);
+                }
+            }
+            catch (SqlException)
+            {
+                throw;
+            }
         }
 
         public List<ComicBook> ComicsInCollection(Collection collection)

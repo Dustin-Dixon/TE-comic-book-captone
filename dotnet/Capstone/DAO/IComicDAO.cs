@@ -8,7 +8,7 @@ namespace Capstone.DAO
 
         List<ComicBook> ComicsInCollection(Collection collection);
 
-        ComicBook AddComicToCollection(int collectionId);
+        void AddComicToCollection(int collectionId, ComicBook comicBook);
 
     }
 }
