@@ -44,10 +44,13 @@ export default {
   },
   methods: {
     saveCollection() {
-      CollectionService.addCollection(this.newCollection);
+      CollectionService.addCollection(this.newCollection).then((response) => {
+        if (response.status === 201) {
+          this.refreshCollections();
+        }
+      });
       this.dialog = false;
       this.newCollection = { name: "" };
-      this.refreshCollections();
     },
     changeSelected() {
       this.$store.commit(
@@ -72,7 +75,7 @@ export default {
   created() {
     this.refreshCollections().then(() => {
       this.changeSelected();
-    })
+    });
   },
 };
 </script>

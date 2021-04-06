@@ -7,5 +7,9 @@ export default {
 
     addCollection(collection) {
         return axios.post("/user/collection", collection);
+    },
+
+    addComicToCollection(collection, comic) {
+        return axios.post(`/user/collection/${collection.collectionID}`, comic);
     }
 }
