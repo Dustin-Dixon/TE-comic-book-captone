@@ -48,3 +48,33 @@ CREATE TABLE collections_comics (
 	CONSTRAINT FK_collections_id FOREIGN KEY (collection_id) REFERENCES collections (collection_id),
 	CONSTRAINT FK_comics_id FOREIGN KEY (comic_id) REFERENCES comics (comic_id)
 );
+
+--------Users Row--------------------------------------
+
+SET IDENTITY_INSERT users ON;
+
+INSERT INTO users (user_id, username, password_hash, salt, user_role) VALUES (1, 'testuser', 'zZwpBoyj0/pvZkhSD35Gwm5e6yE=', 'tXjvMz9Q5eA=', 'standard');
+
+SET IDENTITY_INSERT users OFF;
+
+--------Collections Rows-------------------------------
+
+SET IDENTITY_INSERT collections ON;
+
+INSERT INTO collections (collection_id, user_id, name) VALUES (1, 1, 'TestCollection');
+
+SET IDENTITY_INSERT collections OFF;
+
+--------Comics Rows------------------------------------
+
+SET IDENTITY_INSERT comics ON;
+
+INSERT INTO comics (comic_id, name, author, release_date) VALUES (1, 'Spiderman', 'Stan Lee', '1962-06-05');
+
+SET IDENTITY_INSERT comics OFF;
+
+--------Collections_comics Rows------------------------
+
+INSERT INTO collections_comics (collection_id, comic_id, quantity) VALUES (1, 1, 2);
+
+
