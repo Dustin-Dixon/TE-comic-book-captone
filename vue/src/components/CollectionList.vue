@@ -1,7 +1,11 @@
 <template>
   <div>
     <v-list nav dense>
-      <v-list-item-group v-model="selectedItem" color="primary">
+      <v-list-item-group
+        v-model="selectedItem"
+        color="primary"
+        @change="changeSelected"
+      >
         <v-list-item v-for="collection in collections" :key="collection.id">
           <v-list-item-content>
             <v-list-item-title v-text="collection.name" />
@@ -15,7 +19,7 @@
     <v-dialog v-model="dialog" max-width="500px">
       <v-card>
         <v-card-text>
-          <v-text-field label="Collection Name" v-model="newCollection.name"/>
+          <v-text-field label="Collection Name" v-model="newCollection.name" />
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -27,7 +31,7 @@
 </template>
 
 <script>
-import CollectionService from '../services/CollectionService';
+import CollectionService from "../services/CollectionService";
 
 export default {
   data() {
@@ -35,16 +39,40 @@ export default {
       dialog: false,
       selectedItem: 0,
       newCollection: { name: "" },
+      collections: [],
     };
   },
   methods: {
     saveCollection() {
       CollectionService.addCollection(this.newCollection);
       this.dialog = false;
-      this.newCollection = {name: ''};
+      this.newCollection = { name: "" };
+      this.refreshCollections();
+    },
+    changeSelected() {
+      this.$store.commit(
+        "SELECT_COLLECTION",
+        this.collections[this.selectedItem]
+      );
+    },
+    refreshCollections() {
+      return CollectionService.getUserCollections()
+        .then((response) => {
+          if (response.status === 200) {
+            this.collections = response.data;
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          this.error = error;
+        });
     },
   },
   name: "CollectionList",
-  props: ["collections"],
+  created() {
+    this.refreshCollections().then(() => {
+      this.changeSelected();
+    })
+  },
 };
 </script>

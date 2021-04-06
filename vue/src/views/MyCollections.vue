@@ -7,7 +7,10 @@
     </v-row>
     <v-row>
       <v-col cols="3">
-        <collection-list :collections="collections" />
+        <collection-list />
+      </v-col>
+      <v-col>
+        <collection-display />
       </v-col>
     </v-row>
   </v-container>
@@ -15,28 +18,16 @@
 
 <script>
 import CollectionList from "../components/CollectionList.vue";
-import CollectionService from "../services/CollectionService";
+import CollectionDisplay from "../components/CollectionDisplay.vue";
 
 export default {
   name: "MyCollections",
-  components: { CollectionList },
+  components: { CollectionList, CollectionDisplay },
   data() {
     return {
-      collections: [],
       error: "",
     };
   },
-  created() {
-    CollectionService.getUserCollections()
-      .then((response) => {
-        if (response.status === 200) {
-          this.collections = response.data;
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        this.error = error;
-      });
-  },
+
 };
 </script>
