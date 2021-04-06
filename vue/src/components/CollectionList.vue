@@ -16,6 +16,16 @@
             </v-list-item-content>
           </v-list-item>
         </v-list-item-group>
+        <v-btn
+              fab
+              color="primary"
+              bottom
+              left
+              absolute
+              @click="dialog = !dialog"
+            >
+              <v-icon>mdi-plus</v-icon>
+            </v-btn>
       </v-list>
 </template>
 
@@ -23,7 +33,7 @@
 export default {
   data() {
     return {
-      selectedItem: ''
+      selectedItem: 0
     }
   },
   name: "CollectionList",
