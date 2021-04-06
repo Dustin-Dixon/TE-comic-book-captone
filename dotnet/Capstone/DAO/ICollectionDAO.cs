@@ -5,8 +5,7 @@ namespace Capstone.DAO
 {
     public interface ICollectionDAO
     {
-        Collection CreateCollection(int userId, string name);
-        Collection ReturnAddedCollection(int id);
+        void CreateCollection(Collection collection);
         List<Collection> GetAllUserCollections(int userId);
     }
 }
