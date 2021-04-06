@@ -37,8 +37,8 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("INSERT INTO comics (name, author, release_date)" +
-                                                    "VALUES (@name, @author, @release_date;" +
+                    SqlCommand cmd = new SqlCommand("INSERT INTO comics (name, author, release_date) " +
+                                                    "VALUES (@name, @author, @release_date); " +
                                                     "SELECT SCOPE_IDENTITY()", conn);
                     cmd.Parameters.AddWithValue("@name", comicBook.Name);
                     cmd.Parameters.AddWithValue("@author", comicBook.Author);
@@ -60,7 +60,7 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("INSERT INTO collections_comics (collection_id, comic_id, quantity)" +
+                    SqlCommand cmd = new SqlCommand("INSERT INTO collections_comics (collection_id, comic_id, quantity) " +
                                                     "VALUES(@collection_id, @comic_id, @quantity)", conn);
                     cmd.Parameters.AddWithValue("@collection_id", collectionId);
                     cmd.Parameters.AddWithValue("@comic_id", comicId);
@@ -83,10 +83,10 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("SELECT com.comic_id, com.name, com.author, com.release_date" +
-                                                    "FROM comics com" +
-                                                    "INNER JOIN collections_comics cc ON com.comic_id = cc.comic_id" +
-                                                    "INNER JOIN collections col ON cc.collection_id = col.collection_id" +
+                    SqlCommand cmd = new SqlCommand("SELECT com.comic_id, com.name, com.author, com.release_date " +
+                                                    "FROM comics com " +
+                                                    "INNER JOIN collections_comics cc ON com.comic_id = cc.comic_id " +
+                                                    "INNER JOIN collections col ON cc.collection_id = col.collection_id " +
                                                     "WHERE col.user_id = @user_id AND col.collection_id = @collection_id", conn);
                     cmd.Parameters.AddWithValue("@user_id", collection.UserID);
                     cmd.Parameters.AddWithValue("@collection_id", collection.CollectionID);
