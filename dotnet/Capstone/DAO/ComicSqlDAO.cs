@@ -21,7 +21,7 @@ namespace Capstone.DAO
             throw new NotImplementedException();
         }
 
-        public List<ComicBook> ComicsInCollection(int userId, Collection collection)
+        public List<ComicBook> ComicsInCollection(Collection collection)
         {
             List<ComicBook> comicsInCollection = new List<ComicBook>();
 
