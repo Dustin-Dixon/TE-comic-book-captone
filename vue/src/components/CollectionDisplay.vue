@@ -1,10 +1,13 @@
 <template>
   <div>
-    <v-row
+    <v-row v-if="addComic"
       ><v-col align="center"
         ><v-btn @click="dialog = !dialog">Add Comic</v-btn></v-col
       ></v-row
     >
+
+    <div v-for="comic in comics" :key="comic.comicID">{{ comic.name }}</div>
+
     <v-dialog v-model="dialog" max-width="500px">
       <v-card>
         <v-card-text>
@@ -64,16 +67,18 @@ export default {
   },
   methods: {
     saveComic() {
-      CollectionService.addComicToCollection(
-        this.$store.state.selectedCollection,
-        this.newComic
-      ).then((response) => {
-        if (response.status === 201) {
-          // Refresh comics for current selection
-        }
-      });
+      this.addComic(this.newComic);
       this.newComic = { name: "", author: "", releaseDate: "" };
       this.dialog = false;
+    },
+  },
+  props: {
+    comics: {
+      type: Array,
+      default: () => [],
+    },
+    addComic: {
+      type: Function,
     },
   },
 };

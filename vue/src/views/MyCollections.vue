@@ -14,7 +14,7 @@
         />
       </v-col>
       <v-col>
-        <collection-display />
+        <collection-display :addComic="addComicToCollection" :comics="comics" />
       </v-col>
     </v-row>
   </v-container>
@@ -33,6 +33,8 @@ export default {
     return {
       error: "",
       collections: [],
+      comics: [],
+      selectedCollection: {},
     };
   },
   methods: {
@@ -44,14 +46,32 @@ export default {
       });
     },
     selectCollection(selectedCollection) {
-      console.log(selectedCollection);
-    }
+      this.selectedCollection = selectedCollection;
+      CollectionService.getComicsInCollection(selectedCollection).then(
+        (response) => {
+          if (response.status === 200) {
+            this.comics = response.data;
+          }
+        }
+      );
+    },
+    addComicToCollection(newComic) {
+      CollectionService.addComicToCollection(
+        this.selectedCollection,
+        newComic
+      ).then((response) => {
+        if (response.status === 201) {
+          this.comics.push(response.data);
+        }
+      });
+    },
   },
   created() {
     return CollectionService.getUserCollections()
       .then((response) => {
         if (response.status === 200) {
           this.collections = response.data;
+          this.selectCollection(this.collections[0]);
         }
       })
       .catch((error) => {
