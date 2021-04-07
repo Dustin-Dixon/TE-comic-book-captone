@@ -55,8 +55,6 @@
 </template>
 
 <script>
-import CollectionService from "../services/CollectionService";
-
 export default {
   data() {
     return {
