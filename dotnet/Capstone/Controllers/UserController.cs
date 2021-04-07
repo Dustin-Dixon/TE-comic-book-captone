@@ -45,10 +45,10 @@ namespace Capstone.Controllers
             return Created($"/user/collection/{collection.CollectionID}", collection);
         }
         [HttpGet("collection/{id}")]
-        public ActionResult<List<ComicBook>> ComicsInCollection(Collection collection)
+        public ActionResult<List<ComicBook>> ComicsInCollection(int id)
         {
-            collection.UserID = GetUserIdFromToken();
-            List<ComicBook> comicsInCollection = comicDAO.ComicsInCollection(collection);
+            int userID = GetUserIdFromToken();
+            List<ComicBook> comicsInCollection = comicDAO.ComicsInCollection(userID, id);
             return Ok(comicsInCollection);
         }
        [HttpPost("collection/{id}")]
