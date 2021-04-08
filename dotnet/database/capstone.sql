@@ -50,6 +50,21 @@ CREATE TABLE collections_comics (
 	CONSTRAINT FK_comics_id FOREIGN KEY (comic_id) REFERENCES comics (comic_id)
 );
 
+CREATE TABLE comic_creators (
+	creator_id int IDENTITY(1,1) NOT NULL,
+	first_name varchar(100) NOT NULL,
+	last_name varchar(100) NOT NULL,
+	CONSTRAINT PK_comic_creators PRIMARY KEY (creator_id)
+);
+	
+CREATE TABLE comic_creators_contributions (
+	comic_id int NOT NULL,
+	creator_id int NOT NULL,
+	CONSTRAINT PK_comic_creators_contributions PRIMARY KEY (comic_id,creator_id),
+	CONSTRAINT FK_creator_id FOREIGN KEY (creator_id) REFERENCES comic_creators (creator_id),
+	CONSTRAINT FK_comic_id FOREIGN KEY (comic_id) REFERENCES comics (comic_id)
+	);
+
 --------Users Row--------------------------------------
 
 SET IDENTITY_INSERT users ON;
@@ -77,8 +92,17 @@ SET IDENTITY_INSERT comics OFF;
 
 --------Collections_comics Rows------------------------
 
+
 INSERT INTO collections_comics (collection_id, comic_id, quantity) VALUES (1, 1, 2);
 INSERT INTO collections_comics (collection_id, comic_id, quantity) VALUES (1, 2, 1);
 INSERT INTO collections_comics (collection_id, comic_id, quantity) VALUES (2, 2, 1);
 
 
+-------comic_creator Rows----------------
+SET IDENTITY_INSERT comic_creators ON;
+INSERT INTO comic_creators (creator_id, first_name, last_name) VALUES (1, 'Stan', 'Lee');
+INSERT INTO comic_creators (creator_id, first_name, last_name) VALUES (2, 'LeBron', 'James');
+SET IDENTITY_INSERT comic_creators OFF;
+
+INSERT INTO comic_creators_contributions (comic_id,creator_id) VALUES(1,1);
+INSERT INTO comic_creators_contributions (comic_id,creator_id) VALUES(2,2);
