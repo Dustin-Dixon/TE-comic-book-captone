@@ -37,6 +37,7 @@ namespace Capstone.Controllers
             List<Collection> collections = collectionDAO.GetAllUserCollections(userID);
             return Ok(collections);
         }
+
         [HttpPost("collection")]
         public ActionResult<Collection> CreateCollection(Collection collection)
         {
@@ -44,13 +45,23 @@ namespace Capstone.Controllers
             collectionDAO.CreateCollection(collection);
             return Created($"/user/collection/{collection.CollectionID}", collection);
         }
+
         [HttpGet("collection/{id}")]
         public ActionResult<List<ComicBook>> ComicsInCollection(int id)
         {
+            Collection compareCollection = collectionDAO.GetSingleCollection(id);
             int userID = GetUserIdFromToken();
-            List<ComicBook> comicsInCollection = comicDAO.ComicsInCollection(userID, id);
-            return Ok(comicsInCollection);
+            if (userID == compareCollection.UserID)
+            {
+                List<ComicBook> comicsInCollection = comicDAO.ComicsInCollection(id);
+                return Ok(comicsInCollection);
+            }
+            else
+            {
+                return Unauthorized(new {message = "Not owner of collection"});
+            }
         }
+
        [HttpPost("collection/{id}")]
        public ActionResult<ComicBook> AddComicToCollection(int id, ComicBook comicBook)
        {
@@ -70,6 +81,7 @@ namespace Capstone.Controllers
             }
 
        }
+
        [HttpPut("collection/{id}")]
        public ActionResult<Collection> UpdateCollectionPrivacy(int id, Collection collection)
         {

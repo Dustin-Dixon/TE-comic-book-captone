@@ -74,7 +74,7 @@ namespace Capstone.DAO
             }
         }
 
-        public List<ComicBook> ComicsInCollection(int userId, int collectionId)
+        public List<ComicBook> ComicsInCollection(int collectionId)
         {
             List<ComicBook> comicsInCollection = new List<ComicBook>();
 
@@ -88,8 +88,7 @@ namespace Capstone.DAO
                                                     "FROM comics com " +
                                                     "INNER JOIN collections_comics cc ON com.comic_id = cc.comic_id " +
                                                     "INNER JOIN collections col ON cc.collection_id = col.collection_id " +
-                                                    "WHERE col.user_id = @user_id AND col.collection_id = @collection_id", conn);
-                    cmd.Parameters.AddWithValue("@user_id", userId);
+                                                    "WHERE col.collection_id = @collection_id", conn);
                     cmd.Parameters.AddWithValue("@collection_id", collectionId);
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
