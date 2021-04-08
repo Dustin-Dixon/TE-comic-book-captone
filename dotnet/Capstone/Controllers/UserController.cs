@@ -70,6 +70,39 @@ namespace Capstone.Controllers
             }
 
        }
+       [HttpPut("collection/{id}")]
+       public ActionResult<Collection> UpdateCollectionPrivacy(int id, Collection collection)
+        {
+            Collection compareCollection = collectionDAO.GetSingleCollection(id);
+            collection.UserID = compareCollection.UserID;
+            int userID = GetUserIdFromToken();
+            if (userID == collection.UserID)
+            {
+                int privacyChange = 0;
+                if (collection.Public)
+                {
+                    privacyChange = 1;
+                }
+                try
+                {
+                    using (TransactionScope transaction = new TransactionScope())
+                    {
+                        collectionDAO.UpdateCollectionPrivacy(collection, privacyChange);
+                        transaction.Complete();
+                    }
+                    return Created($"/user/collection/{collection.CollectionID}", collection);
+                }
+                catch (Exception)
+                {
+                    return BadRequest(new { message = "Could not update collection privacy" });
+                }
+            }
+            else 
+            { 
+                return Unauthorized(new { message = "Unauthorized- Not user collection" });
+            }
+        }
+       
     }
    
 }

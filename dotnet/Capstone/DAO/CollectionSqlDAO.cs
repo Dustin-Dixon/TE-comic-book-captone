@@ -94,28 +94,59 @@ namespace Capstone.DAO
             }
         }
 
-        public void UpdateCollectionPrivacy(Collection collection)
+        public bool UpdateCollectionPrivacy(Collection collection, int privacyChange)
         {
-
+            bool output = false;
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("INSERT INTO collections (user_id, name)" +
-                                                    "VALUES (@user_id, @name);" +
-                                                    "SELECT SCOPE_IDENTITY()", conn);
-                    cmd.Parameters.AddWithValue("@user_id", collection.UserID);
+                    SqlCommand cmd = new SqlCommand("UPDATE collections " +
+                                                    "SET is_public = @privacyChange, name = @name " +
+                                                    "WHERE collection_id = @collection_id;", conn);
+                    cmd.Parameters.AddWithValue("@collection_id", collection.CollectionID);
+                    cmd.Parameters.AddWithValue("@privacyChange", privacyChange);
                     cmd.Parameters.AddWithValue("@name", collection.Name);
-                    collection.CollectionID = Convert.ToInt32(cmd.ExecuteScalar());
+                    cmd.ExecuteNonQuery();
+                    output = true;
                 }
             }
             catch (SqlException)
             {
                 throw;
             }
+            return output;
         }
+
+        public Collection GetSingleCollection(int id)
+        {
+            Collection collection = new Collection();
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand("SELECT collection_id, user_id, name, is_public FROM collections WHERE collection_id = @id", conn);
+                    cmd.Parameters.AddWithValue("@id", id);
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                      collection = GetCollectionFromReader(reader);
+                    }
+
+                }
+            }
+            catch (SqlException)
+            {
+                throw;
+            }
+            return collection;
+        }
+    
+
 
         private Collection GetCollectionFromReader(SqlDataReader reader)
         {

@@ -8,5 +8,7 @@ namespace Capstone.DAO
         void CreateCollection(Collection collection);
         List<Collection> GetAllUserCollections(int userId);
         List<Collection> GetPublicCollections();
+        bool UpdateCollectionPrivacy(Collection collection, int privacyChange);
+        Collection GetSingleCollection(int id);
     }
 }
