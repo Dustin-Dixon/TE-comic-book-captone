@@ -29,6 +29,10 @@ namespace Capstone.DAO
             }
         }
 
+        /// <summary>
+        /// Adds <paramref name="comicBook"/> to the comics table in the SQL database.
+        /// </summary>
+        /// <param name="comicBook"></param>
         private void AddComicToComicTable(ComicBook comicBook)
         {
             try
@@ -52,6 +56,13 @@ namespace Capstone.DAO
             }
         }
 
+        /// <summary>
+        /// Adds a ComicBook with <paramref name="comicId"/> to a Collection 
+        /// with <paramref name="collectionId"/> in the collections_comics table 
+        /// in the SQL database.
+        /// </summary>
+        /// <param name="collectionId"></param>
+        /// <param name="comicId"></param>
         private void AddComicToCollectionsComicsTable(int collectionId, int comicId)
         {
             try
@@ -74,6 +85,12 @@ namespace Capstone.DAO
             }
         }
 
+        /// <summary>
+        /// Retrieves a list of ComicBook objects from the SQL database that are in 
+        /// the collection with <paramref name="collectionId"/>.
+        /// </summary>
+        /// <param name="collectionId"></param>
+        /// <returns>A list of ComicBook objects in the collection.</returns>
         public List<ComicBook> ComicsInCollection(int collectionId)
         {
             List<ComicBook> comicsInCollection = new List<ComicBook>();
