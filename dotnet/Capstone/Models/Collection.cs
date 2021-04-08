@@ -10,5 +10,6 @@ namespace Capstone.Models
         public int CollectionID { get; set; }
         public int UserID { get; set; }
         public string Name { get; set; }
+        public bool Public { get; set; }
     }
 }

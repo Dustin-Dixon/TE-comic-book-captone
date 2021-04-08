@@ -27,7 +27,8 @@ CREATE TABLE users (
 CREATE TABLE collections (
 	collection_id int IDENTITY(1,1) NOT NULL,
 	user_id int NOT NULL,
-	name varchar(100) NOT NULL
+	name varchar(100) NOT NULL,
+	is_public bit NOT NULL
 	CONSTRAINT PK_collections PRIMARY KEY (collection_id)
 	CONSTRAINT FK_collections_user_id FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
@@ -61,8 +62,8 @@ SET IDENTITY_INSERT users OFF;
 
 SET IDENTITY_INSERT collections ON;
 
-INSERT INTO collections (collection_id, user_id, name) VALUES (1, 1, 'TestCollection');
-INSERT INTO collections (collection_id, user_id, name) VALUES (2, 1, 'TestMarvel');
+INSERT INTO collections (collection_id, user_id, name, is_public) VALUES (1, 1, 'TestCollection', 1);
+INSERT INTO collections (collection_id, user_id, name, is_public) VALUES (2, 1, 'TestMarvel', 0);
 
 SET IDENTITY_INSERT collections OFF;
 
