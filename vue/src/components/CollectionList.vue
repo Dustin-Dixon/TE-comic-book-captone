@@ -73,7 +73,7 @@ export default {
   methods: {
     onSaveCollection() {
       this.saveCollection(this.newCollection);
-      this.showDialog = false;
+      this.showAddDialog = false;
       this.newCollection = { name: "" };
     }
   },
