@@ -10,6 +10,9 @@
           <v-list-item-content>
             <v-list-item-title v-text="collection.name" />
           </v-list-item-content>
+          <v-list-item-action>
+            <settings-menu :collection="collection" />
+          </v-list-item-action>
         </v-list-item>
       </v-list-item-group>
       <v-btn
@@ -18,12 +21,12 @@
         bottom
         left
         absolute
-        @click="showDialog = !showDialog"
+        @click="showAddDialog = !showAddDialog"
       >
         <v-icon>mdi-plus</v-icon>
       </v-btn>
     </v-list>
-    <v-dialog v-model="showDialog" max-width="500px">
+    <v-dialog v-model="showAddDialog" max-width="500px">
       <v-card>
         <v-card-text>
           <v-text-field label="Collection Name" v-model="newCollection.name" />
@@ -38,13 +41,18 @@
 </template>
 
 <script>
+
+import SettingsMenu from "./Collections/SettingsMenu.vue"
+
 export default {
   name: "CollectionList",
-
+  components: {SettingsMenu},
   data() {
     return {
-      showDialog: false,
+      showAddDialog: false,
+      showSettingsDialog: false,
       newCollection: { name: "" },
+      settingsCollection: {name: "", public: false, collectionID: 0},
       selectedCollection: 0,
     };
   },
