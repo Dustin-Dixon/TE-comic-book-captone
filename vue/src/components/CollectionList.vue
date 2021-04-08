@@ -2,11 +2,12 @@
   <div>
     <v-list nav dense>
       <v-list-item-group v-model="selectedCollection" color="primary">
-        <template
-          v-for="collection in collections"
-          @change="changeSelected(collection)"
-        >
-          <v-list-item :key="collection.collectionID" class="mt-1">
+        <template v-for="collection in collections">
+          <v-list-item
+            :key="collection.collectionID"
+            class="mt-1"
+            @change="changeSelected(collection)"
+          >
             <v-list-item-content>
               <v-list-item-title v-text="collection.name" />
             </v-list-item-content>
@@ -14,7 +15,7 @@
               <settings-menu :collection="collection" />
             </v-list-item-action>
           </v-list-item>
-          <v-divider :key="`divider-${collection.collectionID}`"/>
+          <v-divider :key="`divider-${collection.collectionID}`" />
         </template>
       </v-list-item-group>
       <v-btn
