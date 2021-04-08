@@ -2,18 +2,20 @@
   <div>
     <v-list nav dense>
       <v-list-item-group v-model="selectedCollection" color="primary">
-        <v-list-item
+        <template
           v-for="collection in collections"
-          :key="collection.id"
           @change="changeSelected(collection)"
         >
-          <v-list-item-content>
-            <v-list-item-title v-text="collection.name" />
-          </v-list-item-content>
-          <v-list-item-action>
-            <settings-menu :collection="collection"/>
-          </v-list-item-action>
-        </v-list-item>
+          <v-list-item :key="collection.collectionID" class="mt-1">
+            <v-list-item-content>
+              <v-list-item-title v-text="collection.name" />
+            </v-list-item-content>
+            <v-list-item-action>
+              <settings-menu :collection="collection" />
+            </v-list-item-action>
+          </v-list-item>
+          <v-divider :key="`divider-${collection.collectionID}`"/>
+        </template>
       </v-list-item-group>
       <v-btn
         fab
@@ -41,12 +43,11 @@
 </template>
 
 <script>
-
-import SettingsMenu from "./Collections/SettingsMenu.vue"
+import SettingsMenu from "./Collections/SettingsMenu.vue";
 
 export default {
   name: "CollectionList",
-  components: {SettingsMenu},
+  components: { SettingsMenu },
   data() {
     return {
       showAddDialog: false,
@@ -75,7 +76,7 @@ export default {
       this.saveCollection(this.newCollection);
       this.showAddDialog = false;
       this.newCollection = { name: "" };
-    }
+    },
   },
 };
 </script>

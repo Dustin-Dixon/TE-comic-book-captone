@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <v-row>
       <v-col align="center">
         <h1 class="text-h1">My Collections</h1>
@@ -7,11 +7,11 @@
     </v-row>
     <v-row>
       <v-col cols="3">
-        <collection-list
-          :collections="collections"
-          :saveCollection="saveCollection"
-          :changeSelected="selectCollection"
-        />
+          <collection-list
+            :collections="collections"
+            :saveCollection="saveCollection"
+            :changeSelected="selectCollection"
+          />
       </v-col>
       <v-col>
         <collection-display :addComic="addComicToCollection" :comics="comics" />
