@@ -16,6 +16,12 @@ namespace Capstone.Controllers
         private readonly ICollectionDAO collectionDAO;
         private readonly IComicDAO comicDAO;
 
+        public UserController(IUserDAO userDAO, ICollectionDAO collectionDAO, IComicDAO comicDAO)
+        {
+            this.userDAO = userDAO;
+            this.collectionDAO = collectionDAO;
+            this.comicDAO = comicDAO;
+        }
         private int GetUserIdFromToken()
         {
             string userIdStr = User.FindFirst("sub")?.Value;
@@ -23,11 +29,22 @@ namespace Capstone.Controllers
             return Convert.ToInt32(userIdStr);
         }
 
-        public UserController(IUserDAO userDAO, ICollectionDAO collectionDAO, IComicDAO comicDAO)
+        /// <summary>
+        /// Gets a collection matching the parameter, 
+        /// then compares the current user's id against the collection id.
+        /// </summary>
+        /// <param name="collectionId"></param>
+        /// <returns>A boolean representing a match or not.</returns>
+        private bool VerifyActiveUserOwnsCollection(int collectionId)
         {
-            this.userDAO = userDAO;
-            this.collectionDAO = collectionDAO;
-            this.comicDAO = comicDAO;
+            bool userOwns = false;
+            Collection collection = collectionDAO.GetSingleCollection(collectionId);
+            int userID = GetUserIdFromToken();
+            if (userID == collection.UserID)
+            {
+                userOwns = true;
+            }
+            return userOwns;
         }
 
         [HttpGet("collection")]
@@ -49,9 +66,7 @@ namespace Capstone.Controllers
         [HttpGet("collection/{id}")]
         public ActionResult<List<ComicBook>> ComicsInCollection(int id)
         {
-            Collection compareCollection = collectionDAO.GetSingleCollection(id);
-            int userID = GetUserIdFromToken();
-            if (userID == compareCollection.UserID)
+            if (VerifyActiveUserOwnsCollection(id))
             {
                 List<ComicBook> comicsInCollection = comicDAO.ComicsInCollection(id);
                 return Ok(comicsInCollection);
@@ -65,19 +80,26 @@ namespace Capstone.Controllers
        [HttpPost("collection/{id}")]
        public ActionResult<ComicBook> AddComicToCollection(int id, ComicBook comicBook)
        {
-            try
+            if (VerifyActiveUserOwnsCollection(id))
             {
-                using (TransactionScope transaction = new TransactionScope())
+                try
                 {
-                    comicDAO.AddComicToCollection(id, comicBook);
-                    
-                    transaction.Complete();
+                    using (TransactionScope transaction = new TransactionScope())
+                    {
+                        comicDAO.AddComicToCollection(id, comicBook);
+
+                        transaction.Complete();
+                    }
+                    return Created($"/user/collection/{id}", comicBook);
                 }
-                return Created($"/user/collection/{id}", comicBook);
+                catch (Exception)
+                {
+                    return BadRequest(new { message = "Could not add comic to collection" });
+                }
             }
-            catch(Exception)
+            else
             {
-                return BadRequest(new { message = "Could not add comic to collection" });
+                return Unauthorized(new { message = "Not owner of collection" });
             }
 
        }
