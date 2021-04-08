@@ -3,7 +3,7 @@
     <v-form @submit.prevent="login">
       <v-row>
         <v-col align="center">
-          <h1>Please Sign In</h1>
+          <h1 class="text-h1">Please Sign In</h1>
         </v-col>
       </v-row>
       <v-row v-if="invalidCredentials">
