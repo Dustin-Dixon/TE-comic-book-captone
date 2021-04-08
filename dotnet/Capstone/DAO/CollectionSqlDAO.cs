@@ -18,6 +18,32 @@ namespace Capstone.DAO
             connectionString = dbConnectionString;
         }
 
+        public List<Collection> GetPublicCollections()
+        {
+            List<Collection> publicCollections = new List<Collection>();
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand("SELECT collection_id, user_id, name, is_public FROM collections WHERE is_public = 1", conn);
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        publicCollections.Add(GetCollectionFromReader(reader));
+                    }
+
+                }
+            }
+            catch (SqlException)
+            {
+                throw;
+            }
+            return publicCollections;
+        }
+
         public List<Collection> GetAllUserCollections(int userId)
         {
             List<Collection> userCollections = new List<Collection>();
@@ -28,7 +54,7 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("SELECT collection_id, user_id, name FROM collections WHERE user_id = @user_id", conn);
+                    SqlCommand cmd = new SqlCommand("SELECT collection_id, user_id, name, is_public FROM collections WHERE user_id = @user_id", conn);
                     cmd.Parameters.AddWithValue("@user_id", userId);
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
@@ -54,8 +80,8 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("INSERT INTO collections (user_id, name)" +
-                                                    "VALUES (@user_id, @name);" +
+                    SqlCommand cmd = new SqlCommand("INSERT INTO collections (user_id, name, is_public)" +
+                                                    "VALUES (@user_id, @name, 0);" +
                                                     "SELECT SCOPE_IDENTITY()", conn);
                     cmd.Parameters.AddWithValue("@user_id", collection.UserID);
                     cmd.Parameters.AddWithValue("@name", collection.Name);
@@ -98,6 +124,7 @@ namespace Capstone.DAO
                 CollectionID = Convert.ToInt32(reader["collection_id"]),
                 UserID = Convert.ToInt32(reader["user_id"]),
                 Name = Convert.ToString(reader["name"]),
+                Public = Convert.ToBoolean(reader["is_public"]),
             };
 
             return c;
