@@ -3,7 +3,7 @@
     <v-form @submit.prevent="register">
       <v-row>
         <v-col align="center">
-          <h1>Create Account</h1>
+          <h1 class="text-h1">Create Account</h1>
         </v-col>
       </v-row>
       <v-row v-if="registrationErrors">

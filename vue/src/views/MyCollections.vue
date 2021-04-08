@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col align="center">
-        <h1>My Collections</h1>
+        <h1 class="text-h1">My Collections</h1>
       </v-col>
     </v-row>
     <v-row>
