@@ -11,7 +11,7 @@
             <v-list-item-title v-text="collection.name" />
           </v-list-item-content>
           <v-list-item-action>
-            <settings-menu :collection="collection" />
+            <settings-menu :collection="collection"/>
           </v-list-item-action>
         </v-list-item>
       </v-list-item-group>
@@ -50,9 +50,7 @@ export default {
   data() {
     return {
       showAddDialog: false,
-      showSettingsDialog: false,
       newCollection: { name: "" },
-      settingsCollection: {name: "", public: false, collectionID: 0},
       selectedCollection: 0,
     };
   },
@@ -77,7 +75,7 @@ export default {
       this.saveCollection(this.newCollection);
       this.showDialog = false;
       this.newCollection = { name: "" };
-    },
+    }
   },
 };
 </script>
