@@ -1,14 +1,15 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Capstone.DAO;
+using Capstone.Security;
+using Capstone.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Text;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Capstone.DAO;
-using Capstone.Security;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
 
 namespace Capstone
 {
@@ -65,8 +66,9 @@ namespace Capstone
             services.AddTransient<IUserDAO>(m => new UserSqlDAO(connectionString));
             services.AddTransient<ICollectionDAO>(m => new CollectionSqlDAO(connectionString));
             services.AddTransient<IComicDAO>(m => new ComicSqlDAO(connectionString));
+            services.AddTransient<IComicVineService>(m => new ComicVineService(Configuration["ComicVine:API_KEY"]));
         }
-    
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
