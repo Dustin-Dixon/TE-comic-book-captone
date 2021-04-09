@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import SettingsMenu from "./Collections/SettingsMenu.vue";
+import SettingsMenu from "./SettingsMenu.vue";
 
 export default {
   name: "CollectionList",

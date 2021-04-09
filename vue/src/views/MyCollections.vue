@@ -21,8 +21,8 @@
 </template>
 
 <script>
-import CollectionList from "../components/CollectionList.vue";
-import CollectionDisplay from "../components/CollectionDisplay.vue";
+import CollectionList from "../components/Collections/CollectionList.vue";
+import CollectionDisplay from "../components/Collections/CollectionDisplay.vue";
 
 import CollectionService from "../services/CollectionService";
 

@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import CollectionCarousel from '../components/CollectionCarousel.vue';
+import CollectionCarousel from '../components/Collections/CollectionCarousel.vue';
 
 export default {
   components: {
