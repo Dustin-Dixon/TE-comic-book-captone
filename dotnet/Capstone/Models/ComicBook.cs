@@ -7,9 +7,11 @@ namespace Capstone.Models
 {
     public class ComicBook
     {
-        public int ComicID { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
-        public string Author { get; set; }
-        public DateTime ReleaseDate { get; set; }
+        public string IssueNumber { get; set; }
+        public string CoverDate { get; set; }
+        public string SiteDetailUrl { get; set; }
+        public ComicImages? Image { get; set; }
     }
 }

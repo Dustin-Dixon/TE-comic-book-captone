@@ -86,8 +86,11 @@ namespace Capstone.Controllers
                 {
                     using (TransactionScope transaction = new TransactionScope())
                     {
-                        comicDAO.AddComicToCollection(id, comicBook);
-
+                        bool isSuccessful = comicDAO.AddComicToCollection(id, comicBook);
+                        if (!isSuccessful)
+                        {
+                            return BadRequest(new { message = "Adding a comic was unsuccessful" });
+                        }
                         transaction.Complete();
                     }
                     return Created($"/user/collection/{id}", comicBook);
@@ -121,7 +124,11 @@ namespace Capstone.Controllers
                 {
                     using (TransactionScope transaction = new TransactionScope())
                     {
-                        collectionDAO.UpdateCollectionPrivacy(collection, privacyChange);
+                        bool isSuccessful = collectionDAO.UpdateCollectionPrivacy(collection, privacyChange);
+                        if (!isSuccessful)
+                        {
+                            return BadRequest(new { message = "Failed to update collection" });
+                        }
                         transaction.Complete();
                     }
                     return Created($"/user/collection/{collection.CollectionID}", collection);

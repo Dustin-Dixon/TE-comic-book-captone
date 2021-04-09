@@ -15,12 +15,23 @@ namespace Capstone.Services
             client.AddDefaultQueryParameter("format", "json");
         }
 
-        public async Task<string> GetIssuesInVolume(int volumeId)
+        public async Task<ComicVineIssueResponse> GetIssues(ComicVineFilters filter)
         {
             IRestRequest request = new RestRequest("/issues");
-            request.AddQueryParameter("filter", $"volume:{volumeId}");
-            IRestResponse response = await client.ExecuteGetAsync(request);
-            return response.Content;
+            if (filter.HasFilters())
+            {
+            request.AddQueryParameter("filter", filter.GetFiltersString());
+            }
+            IRestResponse<ComicVineIssueResponse> response = await client.ExecuteGetAsync<ComicVineIssueResponse>(request);
+            return response.Data;
+        }
+
+        public async Task<ComicVineIssueResponse> GetIssueById(int issueId)
+        {
+            IRestRequest request = new RestRequest("/issue");
+            request.AddQueryParameter("filter", $"id:{issueId}");
+            IRestResponse<ComicVineIssueResponse> response = await client.ExecuteGetAsync<ComicVineIssueResponse>(request);
+            return response.Data;
         }
     }
 }

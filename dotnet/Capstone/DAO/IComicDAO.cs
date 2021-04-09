@@ -6,6 +6,6 @@ namespace Capstone.DAO
     public interface IComicDAO
     {
         List<ComicBook> ComicsInCollection(int collectionId);
-        void AddComicToCollection(int collectionId, ComicBook comicBook);
+        bool AddComicToCollection(int collectionId, ComicBook comicBook);
     }
 }
