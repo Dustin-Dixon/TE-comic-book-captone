@@ -6,7 +6,7 @@ namespace Capstone.Services
     public class ComicVineService : IComicVineService
     {
         private const string URL = "https://comicvine.gamespot.com/api";
-        RestClient client;
+        readonly RestClient client;
 
         public ComicVineService(string apiKey)
         {
