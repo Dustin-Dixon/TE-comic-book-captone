@@ -98,7 +98,7 @@ namespace Capstone.Controllers
             int userId = GetUserIdFromToken();
             if (VerifyActiveUserOwnsCollection(id))
             {
-                if (CheckUserRole(userId) || collectionDAO.UserTotalComicCount(userId) < 100 )
+                if (CheckUserRole(userId) || collectionDAO.UserTotalComicCount(userId) < 100  )
                 {
 
 
