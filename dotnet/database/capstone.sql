@@ -42,6 +42,16 @@ CREATE TABLE comics (
 	CONSTRAINT PK_comics PRIMARY KEY (comic_id)
 );
 
+CREATE TABLE comic_images (
+	comic_id int NOT NULL,
+	icon_url varchar (255) NOT NULL,
+	small_url varchar (255) NOT NULL,
+	medium_url varchar (255) NOT NULL,
+	thumb_url varchar (255) NOT NULL
+	CONSTRAINT PK_comic_images PRIMARY KEY (comic_id)
+	CONSTRAINT FK_comic_images FOREIGN KEY (comic_id) REFERENCES comics (comic_id)
+);
+
 CREATE TABLE collections_comics (
 	collection_id int NOT NULL,
 	comic_id int NOT NULL,
@@ -87,6 +97,11 @@ SET IDENTITY_INSERT collections OFF;
 
 INSERT INTO comics (comic_id, name, issue_number, cover_date, detail_url) VALUES (1, 'Spiderman', '12', '1962-06-05', 'https://comicvine.gamespot.com/chamber-of-chills-magazine-13-the-lost-race/4000-6/');
 INSERT INTO comics (comic_id, name, issue_number, cover_date, detail_url) VALUES (2, 'TestHero', '40', '2021-04-06', 'https://comicvine.gamespot.com/black-diamond-western-39/4000-11/');
+
+--------Comic_Images Rows------------------------------
+
+INSERT INTO comic_images (comic_id, icon_url, small_url, medium_url, thumb_url) VALUES (1, 'A', 'B', 'C', 'D'); 
+INSERT INTO comic_images (comic_id, icon_url, small_url, medium_url, thumb_url) VALUES (2, '1', '2', '3', '4');
 
 --------Collections_comics Rows------------------------
 
