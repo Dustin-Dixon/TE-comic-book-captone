@@ -6,7 +6,11 @@
       ></v-row
     >
 
-    <comic-card v-for="comic in comics" :key="comic.comicID" :comic="comic"></comic-card>
+    <v-row>
+      <v-col cols="3" v-for="comic in comics" :key="comic.comicID">
+        <comic-card :comic="comic"></comic-card>
+      </v-col>
+    </v-row>
 
     <v-dialog v-model="dialog" max-width="500px">
       <v-card>
@@ -55,7 +59,7 @@
 </template>
 
 <script>
-import ComicCard from "../ComicCard.vue"
+import ComicCard from "../ComicCard.vue";
 
 export default {
   components: {
