@@ -1,7 +1,8 @@
 <template>
     <v-card>
-        <v-skeleton-loader type="image" boilerplate></v-skeleton-loader>
-        <div>{{comic.name}}</div>
+        <v-img :src="comic.image.mediumurl"></v-img>
+        <h6 class="text-center">{{comic.name}}</h6>
+        <p class="text-center">Issue number: {{comic.issuenumber}}</p>
     </v-card>
 </template>
 
