@@ -19,5 +19,9 @@ export default {
 
     updateCollectionSettings(collection) {
         return axios.put(`/user/collection/${collection.collectionID}`, collection);
+    },
+
+    getPublicCollections() {
+        return axios.get("/anonymous/collection");
     }
 }

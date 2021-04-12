@@ -10,7 +10,7 @@
     </v-carousel>
     <v-row v-else>
       <v-col align="center">
-        <v-skeleton-loader class="carousel" type="card-heading, image"/>
+        <v-skeleton-loader class="carousel" type="card-heading, image" />
       </v-col>
     </v-row>
   </div>
@@ -18,6 +18,7 @@
 
 <script>
 import CollectionPreview from "./CollectionPreview";
+import CollectionService from "@/services/CollectionService";
 
 export default {
   components: {
@@ -29,7 +30,14 @@ export default {
       loading: true,
     };
   },
-  created() {},
+  created() {
+    CollectionService.getPublicCollections().then((response) => {
+      if (response.status === 200) {
+        this.collections = response.data;
+        this.loading = false;
+      }
+    });
+  },
 };
 </script>
 
