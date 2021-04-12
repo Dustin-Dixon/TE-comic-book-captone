@@ -189,7 +189,10 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("", conn);
+                    SqlCommand cmd = new SqlCommand("SELECT SUM(quantity) as TotalNumberOfComics " +
+                                                    "FROM collections_comics " +
+                                                    "JOIN collections ON collections.collection_id = collections_comics.collection_id " +
+                                                    "WHERE user_id = @user_id; ", conn);
                     cmd.Parameters.AddWithValue("@user_id", userId);
                     comicTotal = Convert.ToInt32(cmd.ExecuteScalar());
                 }

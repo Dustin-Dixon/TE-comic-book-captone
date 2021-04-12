@@ -10,5 +10,6 @@ namespace Capstone.DAO
         List<Collection> GetPublicCollections();
         bool UpdateCollectionPrivacy(Collection collection, int privacyChange);
         Collection GetSingleCollection(int id);
+        int UserTotalComicCount(int userId);
     }
 }

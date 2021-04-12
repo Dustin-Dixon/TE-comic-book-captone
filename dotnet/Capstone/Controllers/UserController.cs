@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Transactions;
 
 namespace Capstone.Controllers
 {
@@ -13,15 +12,17 @@ namespace Capstone.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
+        private readonly IUserDAO userDAO;
         private readonly ICollectionDAO collectionDAO;
         private readonly IComicDAO comicDAO;
         private readonly IComicVineService comicVine;
 
-        public UserController(ICollectionDAO collectionDAO, IComicDAO comicDAO, IComicVineService comicVine)
+        public UserController(ICollectionDAO collectionDAO, IComicDAO comicDAO, IComicVineService comicVine, IUserDAO userDAO)
         {
             this.collectionDAO = collectionDAO;
             this.comicDAO = comicDAO;
             this.comicVine = comicVine;
+            this.userDAO = userDAO;
         }
         private int GetUserIdFromToken()
         {
@@ -47,6 +48,20 @@ namespace Capstone.Controllers
             }
             return userOwns;
         }
+
+        private bool CheckUserRole(int userId)
+        {
+            bool userIsPremium = false;
+            User user = userDAO.GetUser(userId);
+            string userRole = user.Role;
+            if (userRole == "premium")
+            {
+                userIsPremium = true;
+            }
+            return userIsPremium;
+        }
+
+
 
         [HttpGet("collection")]
         public ActionResult<List<Collection>> ListOfCollection()
@@ -81,38 +96,46 @@ namespace Capstone.Controllers
         [HttpPost("collection/{id}")]
         public async Task<ActionResult<ComicBook>> AddComicToCollection(int id, ComicBook comicBook)
         {
+            int userId = GetUserIdFromToken();
             if (VerifyActiveUserOwnsCollection(id))
             {
-                try
+                if (CheckUserRole(userId) || collectionDAO.UserTotalComicCount(userId) < 100)
                 {
-                    ComicBook existing = comicDAO.GetById(comicBook.Id);
-
-                    // Comic book is not in local database, get from API
-                    if (existing == null)
+                    try
                     {
-                        ComicVineFilters filters = new ComicVineFilters();
-                        filters.AddFilter("id", comicBook.Id.ToString());
-                        ComicVineIssueResponse response = await comicVine.GetIssues(filters);
-                        if (response.StatusCode != 1)
+                        ComicBook existing = comicDAO.GetById(comicBook.Id);
+
+                        // Comic book is not in local database, get from API
+                        if (existing == null)
                         {
-                            throw new ComicVineException($"Failed ComicVine request: {response.Error}");
+                            ComicVineFilters filters = new ComicVineFilters();
+                            filters.AddFilter("id", comicBook.Id.ToString());
+                            ComicVineIssueResponse response = await comicVine.GetIssues(filters);
+                            if (response.StatusCode != 1)
+                            {
+                                throw new ComicVineException($"Failed ComicVine request: {response.Error}");
+                            }
+                            ComicBook issue = response.Results[0];
+                            comicDAO.AddComic(issue);
+                            existing = issue;
                         }
-                        ComicBook issue = response.Results[0];
-                        comicDAO.AddComic(issue);
-                        existing = issue;
+
+                        comicDAO.AddComicToCollection(id, existing);
+
+                        return Created($"/user/collection/{id}", comicBook);
                     }
-
-                    comicDAO.AddComicToCollection(id, existing);
-
-                    return Created($"/user/collection/{id}", comicBook);
+                    catch (ComicVineException e)
+                    {
+                        return StatusCode(502, new { message = $"Bad Gateway: 502 - {e.Message}" });
+                    }
+                    catch (Exception)
+                    {
+                        return BadRequest(new { message = "Could not add comic to collection" });
+                    }
                 }
-                catch (ComicVineException e)
+                else
                 {
-                    return StatusCode(502, new { message = $"Bad Gateway: 502 - {e.Message}" });
-                }
-                catch (Exception)
-                {
-                    return BadRequest(new { message = "Could not add comic to collection" });
+                    return BadRequest(new { message = "Need premium status to add more than 100 comics across all your collections." });
                 }
             }
             else
@@ -137,14 +160,10 @@ namespace Capstone.Controllers
                 }
                 try
                 {
-                    using (TransactionScope transaction = new TransactionScope())
+                    bool isSuccessful = collectionDAO.UpdateCollectionPrivacy(collection, privacyChange);
+                    if (!isSuccessful)
                     {
-                        bool isSuccessful = collectionDAO.UpdateCollectionPrivacy(collection, privacyChange);
-                        if (!isSuccessful)
-                        {
-                            return BadRequest(new { message = "Failed to update collection" });
-                        }
-                        transaction.Complete();
+                        return BadRequest(new { message = "Failed to update collection" });
                     }
                     return Created($"/user/collection/{collection.CollectionID}", collection);
                 }
