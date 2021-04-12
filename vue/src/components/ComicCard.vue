@@ -1,8 +1,8 @@
 <template>
     <v-card>
-        <v-img :src="comic.image.mediumurl"></v-img>
+        <v-img :src="comic.image.mediumUrl"></v-img>
         <h6 class="text-center">{{comic.name}}</h6>
-        <p class="text-center">Issue number: {{comic.issuenumber}}</p>
+        <p class="text-center">Issue number: {{comic.issueNumber}}</p>
     </v-card>
 </template>
 
