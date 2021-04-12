@@ -6,7 +6,7 @@
       ></v-row
     >
 
-    <div v-for="comic in comics" :key="comic.comicID">{{ comic.name }}</div>
+    <comic-card v-for="comic in comics" :key="comic.comicID" :comic="comic"></comic-card>
 
     <v-dialog v-model="dialog" max-width="500px">
       <v-card>
@@ -55,7 +55,12 @@
 </template>
 
 <script>
+import ComicCard from "../ComicCard.vue"
+
 export default {
+  components: {
+    ComicCard,
+  },
   data() {
     return {
       dialog: false,
