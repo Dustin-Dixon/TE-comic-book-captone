@@ -19,26 +19,6 @@ namespace Capstone.DAO
 
         public bool AddComicToCollection(int collectionId, ComicBook comicBook)
         {
-            bool addToComics;
-            bool addToCollectionsComics;
-            try
-            {
-                addToComics = AddComicToComicTable(comicBook);
-                addToCollectionsComics = AddComicToCollectionsComicsTable(collectionId, comicBook.Id);
-            }
-            catch (SqlException)
-            {
-                throw;
-            }
-            return (addToComics && addToCollectionsComics);
-        }
-
-        /// <summary>
-        /// Adds <paramref name="comicBook"/> to the comics table in the SQL database.
-        /// </summary>
-        /// <param name="comicBook"></param>
-        private bool AddComicToComicTable(ComicBook comicBook)
-        {
             int isSuccessful = 0;
             try
             {
@@ -46,14 +26,11 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("INSERT INTO comics (comic_id, name, issue_number, cover_date, detail_url) " +
-                                                    "VALUES (@comic_id, @name, @issue_number, @cover_date, @detail_url); " +
-                                                    "SELECT SCOPE_IDENTITY()", conn);
+                    SqlCommand cmd = new SqlCommand("INSERT INTO collections_comics (collection_id, comic_id, quantity) " +
+                                                    "VALUES(@collection_id, @comic_id, @quantity)", conn);
+                    cmd.Parameters.AddWithValue("@collection_id", collectionId);
                     cmd.Parameters.AddWithValue("@comic_id", comicBook.Id);
-                    cmd.Parameters.AddWithValue("@name", comicBook.Name);
-                    cmd.Parameters.AddWithValue("@issue_number", comicBook.IssueNumber);
-                    cmd.Parameters.AddWithValue("@cover_date", comicBook.CoverDate);
-                    cmd.Parameters.AddWithValue("@detail_url", comicBook.SiteDetailUrl);
+                    cmd.Parameters.AddWithValue("@quantity", 1);
                     isSuccessful = cmd.ExecuteNonQuery();
                 }
             }
@@ -65,13 +42,10 @@ namespace Capstone.DAO
         }
 
         /// <summary>
-        /// Adds a ComicBook with <paramref name="comicId"/> to a Collection 
-        /// with <paramref name="collectionId"/> in the collections_comics table 
-        /// in the SQL database.
+        /// Adds <paramref name="comicBook"/> to the comics table in the SQL database.
         /// </summary>
-        /// <param name="collectionId"></param>
-        /// <param name="comicId"></param>
-        private bool AddComicToCollectionsComicsTable(int collectionId, int comicId)
+        /// <param name="comicBook"></param>
+        public bool AddComic(ComicBook comicBook)
         {
             int isSuccessful = 0;
             try
@@ -80,11 +54,13 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("INSERT INTO collections_comics (collection_id, comic_id, quantity) " +
-                                                    "VALUES(@collection_id, @comic_id, @quantity)", conn);
-                    cmd.Parameters.AddWithValue("@collection_id", collectionId);
-                    cmd.Parameters.AddWithValue("@comic_id", comicId);
-                    cmd.Parameters.AddWithValue("@quantity", 1);
+                    SqlCommand cmd = new SqlCommand("INSERT INTO comics (comic_id, name, issue_number, cover_date, detail_url) " +
+                                                    "VALUES (@comic_id, @name, @issue_number, @cover_date, @detail_url)", conn);
+                    cmd.Parameters.AddWithValue("@comic_id", comicBook.Id);
+                    cmd.Parameters.AddWithValue("@name", comicBook.Name);
+                    cmd.Parameters.AddWithValue("@issue_number", comicBook.IssueNumber);
+                    cmd.Parameters.AddWithValue("@cover_date", comicBook.CoverDate);
+                    cmd.Parameters.AddWithValue("@detail_url", comicBook.SiteDetailUrl);
                     isSuccessful = cmd.ExecuteNonQuery();
                 }
             }
@@ -160,6 +136,34 @@ namespace Capstone.DAO
                 throw;
             }
             return searchList;
+        }
+
+        public ComicBook GetById(int comicId)
+        {
+            ComicBook returnComic = null;
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand("SELECT comic_id, name, issue_number, cover_date, detail_url " +
+                                                    "FROM comics " +
+                                                    "WHERE comic_id = @id", conn);
+                    cmd.Parameters.AddWithValue("@id", comicId);
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        returnComic = GetComicFromReader(reader);
+                    }
+                }
+            }
+            catch (SqlException)
+            {
+                throw;
+            }
+            return returnComic;
         }
 
         private ComicBook GetComicFromReader(SqlDataReader reader)

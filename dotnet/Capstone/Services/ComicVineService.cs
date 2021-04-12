@@ -20,18 +20,23 @@ namespace Capstone.Services
             IRestRequest request = new RestRequest("/issues");
             if (filter.HasFilters())
             {
-            request.AddQueryParameter("filter", filter.GetFiltersString());
+                request.AddQueryParameter("filter", filter.GetFiltersString());
             }
             IRestResponse<ComicVineIssueResponse> response = await client.ExecuteGetAsync<ComicVineIssueResponse>(request);
+            HandleError(response);
             return response.Data;
         }
 
-        public async Task<ComicVineIssueResponse> GetIssueById(int issueId)
+        private void HandleError(IRestResponse response)
         {
-            IRestRequest request = new RestRequest("/issue");
-            request.AddQueryParameter("filter", $"id:{issueId}");
-            IRestResponse<ComicVineIssueResponse> response = await client.ExecuteGetAsync<ComicVineIssueResponse>(request);
-            return response.Data;
+            if (response.ResponseStatus != ResponseStatus.Completed)
+            {
+                throw new ComicVineException($"Failed to connect to ComicVine API: {response.ErrorMessage}");
+            }
+            else if (!response.IsSuccessful)
+            {
+                throw new ComicVineException($"Unsuccessful request to ComicVineAPI: Status {response.StatusCode} - {response.StatusDescription}");
+            }
         }
     }
 }

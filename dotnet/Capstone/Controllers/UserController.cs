@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Capstone.DAO;
+﻿using Capstone.DAO;
 using Capstone.Models;
-using Capstone.Security;
-using System.Collections.Generic;
+using Capstone.Services;
+using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Transactions;
 
 namespace Capstone.Controllers
@@ -12,15 +13,15 @@ namespace Capstone.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly IUserDAO userDAO;
         private readonly ICollectionDAO collectionDAO;
         private readonly IComicDAO comicDAO;
+        private readonly IComicVineService comicVine;
 
-        public UserController(IUserDAO userDAO, ICollectionDAO collectionDAO, IComicDAO comicDAO)
+        public UserController(ICollectionDAO collectionDAO, IComicDAO comicDAO, IComicVineService comicVine)
         {
-            this.userDAO = userDAO;
             this.collectionDAO = collectionDAO;
             this.comicDAO = comicDAO;
+            this.comicVine = comicVine;
         }
         private int GetUserIdFromToken()
         {
@@ -73,27 +74,41 @@ namespace Capstone.Controllers
             }
             else
             {
-                return Unauthorized(new {message = "Not owner of collection"});
+                return Unauthorized(new { message = "Not owner of collection" });
             }
         }
 
-       [HttpPost("collection/{id}")]
-       public ActionResult<ComicBook> AddComicToCollection(int id, ComicBook comicBook)
-       {
+        [HttpPost("collection/{id}")]
+        public async Task<ActionResult<ComicBook>> AddComicToCollection(int id, ComicBook comicBook)
+        {
             if (VerifyActiveUserOwnsCollection(id))
             {
                 try
                 {
-                    using (TransactionScope transaction = new TransactionScope())
+                    ComicBook existing = comicDAO.GetById(comicBook.Id);
+
+                    // Comic book is not in local database, get from API
+                    if (existing == null)
                     {
-                        bool isSuccessful = comicDAO.AddComicToCollection(id, comicBook);
-                        if (!isSuccessful)
+                        ComicVineFilters filters = new ComicVineFilters();
+                        filters.AddFilter("id", comicBook.Id.ToString());
+                        ComicVineIssueResponse response = await comicVine.GetIssues(filters);
+                        if (response.StatusCode != 1)
                         {
-                            return BadRequest(new { message = "Adding a comic was unsuccessful" });
+                            throw new ComicVineException($"Failed ComicVine request: {response.Error}");
                         }
-                        transaction.Complete();
+                        ComicBook issue = response.Results[0];
+                        comicDAO.AddComic(issue);
+                        existing = issue;
                     }
+
+                    comicDAO.AddComicToCollection(id, existing);
+
                     return Created($"/user/collection/{id}", comicBook);
+                }
+                catch (ComicVineException e)
+                {
+                    return StatusCode(502, new { message = $"Bad Gateway: 502 - {e.Message}" });
                 }
                 catch (Exception)
                 {
@@ -105,10 +120,10 @@ namespace Capstone.Controllers
                 return Unauthorized(new { message = "Not owner of collection" });
             }
 
-       }
+        }
 
-       [HttpPut("collection/{id}")]
-       public ActionResult<Collection> UpdateCollectionPrivacy(int id, Collection collection)
+        [HttpPut("collection/{id}")]
+        public ActionResult<Collection> UpdateCollectionPrivacy(int id, Collection collection)
         {
             Collection compareCollection = collectionDAO.GetSingleCollection(id);
             collection.UserID = compareCollection.UserID;
@@ -138,12 +153,12 @@ namespace Capstone.Controllers
                     return BadRequest(new { message = "Could not update collection privacy" });
                 }
             }
-            else 
-            { 
-                return Unauthorized(new { message = "Unauthorized- Not user collection" });
+            else
+            {
+                return Unauthorized(new { message = "Unauthorized - Not user collection" });
             }
         }
-       
+
     }
-   
+
 }
