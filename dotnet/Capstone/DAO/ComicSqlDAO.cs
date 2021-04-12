@@ -1,4 +1,5 @@
 ﻿using Capstone.Models;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -129,6 +130,36 @@ namespace Capstone.DAO
                 throw;
             }
             return comicsInCollection;
+        }
+
+        public List<ComicBook> LocalComicSearch(string searchTerm)
+        {
+            List<ComicBook> searchList = new List<ComicBook>();
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand("SELECT TOP (50) comic_id, name, issue_number, cover_date, detail_url " +
+                                                    "FROM comics " +
+                                                    "WHERE name LIKE @searchTerm OR " +
+                                                    "issue_number LIKE @searchTerm OR cover_date LIKE @searchTerm; ", conn);
+                    cmd.Parameters.AddWithValue("@searchTerm", $"%{searchTerm}%");
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        searchList.Add(GetComicFromReader(reader));
+                    }
+
+                }
+            }
+            catch (SqlException)
+            {
+                throw;
+            }
+            return searchList;
         }
 
         private ComicBook GetComicFromReader(SqlDataReader reader)
