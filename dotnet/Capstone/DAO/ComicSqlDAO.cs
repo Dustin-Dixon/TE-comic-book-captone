@@ -19,25 +19,33 @@ namespace Capstone.DAO
 
         public bool AddComicToCollection(int collectionId, ComicBook comicBook)
         {
-            bool addToComics;
-            bool addToCollectionsComics;
+            int isSuccessful = 0;
             try
             {
-                addToComics = AddComicToComicTable(comicBook);
-                addToCollectionsComics = AddComicToCollectionsComicsTable(collectionId, comicBook.Id);
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand("INSERT INTO collections_comics (collection_id, comic_id, quantity) " +
+                                                    "VALUES(@collection_id, @comic_id, @quantity)", conn);
+                    cmd.Parameters.AddWithValue("@collection_id", collectionId);
+                    cmd.Parameters.AddWithValue("@comic_id", comicBook.Id);
+                    cmd.Parameters.AddWithValue("@quantity", 1);
+                    isSuccessful = cmd.ExecuteNonQuery();
+                }
             }
             catch (SqlException)
             {
                 throw;
             }
-            return (addToComics && addToCollectionsComics);
+            return (isSuccessful == 1);
         }
 
         /// <summary>
         /// Adds <paramref name="comicBook"/> to the comics table in the SQL database.
         /// </summary>
         /// <param name="comicBook"></param>
-        private bool AddComicToComicTable(ComicBook comicBook)
+        public bool AddComic(ComicBook comicBook)
         {
             int isSuccessful = 0;
             try
@@ -47,8 +55,7 @@ namespace Capstone.DAO
                     conn.Open();
 
                     SqlCommand cmd = new SqlCommand("INSERT INTO comics (comic_id, name, issue_number, cover_date, detail_url) " +
-                                                    "VALUES (@comic_id, @name, @issue_number, @cover_date, @detail_url); " +
-                                                    "SELECT SCOPE_IDENTITY()", conn);
+                                                    "VALUES (@comic_id, @name, @issue_number, @cover_date, @detail_url)", conn);
                     cmd.Parameters.AddWithValue("@comic_id", comicBook.Id);
                     cmd.Parameters.AddWithValue("@name", comicBook.Name);
                     cmd.Parameters.AddWithValue("@issue_number", comicBook.IssueNumber);
@@ -64,27 +71,23 @@ namespace Capstone.DAO
             return (isSuccessful == 1);
         }
 
-        /// <summary>
-        /// Adds a ComicBook with <paramref name="comicId"/> to a Collection 
-        /// with <paramref name="collectionId"/> in the collections_comics table 
-        /// in the SQL database.
-        /// </summary>
-        /// <param name="collectionId"></param>
-        /// <param name="comicId"></param>
-        private bool AddComicToCollectionsComicsTable(int collectionId, int comicId)
+        public bool AddImages(ComicBook comicBook)
         {
             int isSuccessful = 0;
+            comicBook.Image.ComicId = comicBook.Id;
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("INSERT INTO collections_comics (collection_id, comic_id, quantity) " +
-                                                    "VALUES(@collection_id, @comic_id, @quantity)", conn);
-                    cmd.Parameters.AddWithValue("@collection_id", collectionId);
-                    cmd.Parameters.AddWithValue("@comic_id", comicId);
-                    cmd.Parameters.AddWithValue("@quantity", 1);
+                    SqlCommand cmd = new SqlCommand("INSERT INTO comic_images (comic_id, icon_url, small_url, medium_url, thumb_url) " +
+                                                    "VALUES(@comic_id, @icon_url, @small_url, @medium_url, @thumb_url);", conn);
+                    cmd.Parameters.AddWithValue("@comic_id", comicBook.Id);
+                    cmd.Parameters.AddWithValue("@icon_url", comicBook.Image.IconUrl);
+                    cmd.Parameters.AddWithValue("@small_url", comicBook.Image.SmallUrl);
+                    cmd.Parameters.AddWithValue("@medium_url", comicBook.Image.MediumUrl);
+                    cmd.Parameters.AddWithValue("@thumb_url", comicBook.Image.ThumbUrl);
                     isSuccessful = cmd.ExecuteNonQuery();
                 }
             }
@@ -111,8 +114,10 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("SELECT com.comic_id, com.name, com.issue_number, com.cover_date, com.detail_url " +
+                    SqlCommand cmd = new SqlCommand("SELECT com.comic_id, com.name, com.issue_number, com.cover_date, com.detail_url, " +
+                                                    "icon_url, small_url, medium_url, thumb_url " +
                                                     "FROM comics com " +
+                                                    "INNER JOIN comic_images ci ON ci.comic_id = com.comic_id " +
                                                     "INNER JOIN collections_comics cc ON com.comic_id = cc.comic_id " +
                                                     "INNER JOIN collections col ON cc.collection_id = col.collection_id " +
                                                     "WHERE col.collection_id = @collection_id", conn);
@@ -142,10 +147,12 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("SELECT TOP (50) comic_id, name, issue_number, cover_date, detail_url " +
-                                                    "FROM comics " +
-                                                    "WHERE name LIKE @searchTerm OR " +
-                                                    "issue_number LIKE @searchTerm OR cover_date LIKE @searchTerm; ", conn);
+                    SqlCommand cmd = new SqlCommand("SELECT TOP (50) com.comic_id, com.name, com.issue_number, com.cover_date, " +
+                                                    "com.detail_url, ci.icon_url, ci.small_url, ci.medium_url, ci.thumb_url " +
+                                                    "FROM comics com " +
+                                                    "INNER JOIN comic_images ci ON ci.comic_id = com.comic_id " +
+                                                    "WHERE name LIKE @searchTerm OR issue_number LIKE @searchTerm " +
+                                                    "OR cover_date LIKE @searchTerm; ", conn);
                     cmd.Parameters.AddWithValue("@searchTerm", $"%{searchTerm}%");
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
@@ -162,6 +169,34 @@ namespace Capstone.DAO
             return searchList;
         }
 
+        public ComicBook GetById(int comicId)
+        {
+            ComicBook returnComic = null;
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand("SELECT comic_id, name, issue_number, cover_date, detail_url " +
+                                                    "FROM comics " +
+                                                    "WHERE comic_id = @id", conn);
+                    cmd.Parameters.AddWithValue("@id", comicId);
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        returnComic = GetComicFromReader(reader);
+                    }
+                }
+            }
+            catch (SqlException)
+            {
+                throw;
+            }
+            return returnComic;
+        }
+
         private ComicBook GetComicFromReader(SqlDataReader reader)
         {
             ComicBook cb = new ComicBook()
@@ -170,7 +205,15 @@ namespace Capstone.DAO
                 Name = Convert.ToString(reader["name"]),
                 IssueNumber = Convert.ToString(reader["issue_number"]),
                 CoverDate = Convert.ToString(reader["cover_date"]),
-                SiteDetailUrl = Convert.ToString(reader["detail_url"])
+                SiteDetailUrl = Convert.ToString(reader["detail_url"]),
+                Image = new ComicImages
+                {
+                    ComicId = Convert.ToInt32(reader["comic_id"]),
+                    IconUrl = Convert.ToString(reader["icon_url"]),
+                    SmallUrl = Convert.ToString(reader["small_url"]),
+                    MediumUrl = Convert.ToString(reader["medium_url"]),
+                    ThumbUrl = Convert.ToString(reader["thumb_url"])
+                }
             };
 
             return cb;

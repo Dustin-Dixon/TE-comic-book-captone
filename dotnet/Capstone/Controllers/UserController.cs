@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Capstone.DAO;
+﻿using Capstone.DAO;
 using Capstone.Models;
-using Capstone.Security;
-using System.Collections.Generic;
+using Capstone.Services;
+using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Transactions;
 
 namespace Capstone.Controllers
@@ -15,12 +16,14 @@ namespace Capstone.Controllers
         private readonly IUserDAO userDAO;
         private readonly ICollectionDAO collectionDAO;
         private readonly IComicDAO comicDAO;
+        private readonly IComicVineService comicVine;
 
-        public UserController(IUserDAO userDAO, ICollectionDAO collectionDAO, IComicDAO comicDAO)
+        public UserController(ICollectionDAO collectionDAO, IComicDAO comicDAO, IComicVineService comicVine, IUserDAO userDAO)
         {
-            this.userDAO = userDAO;
             this.collectionDAO = collectionDAO;
             this.comicDAO = comicDAO;
+            this.comicVine = comicVine;
+            this.userDAO = userDAO;
         }
         private int GetUserIdFromToken()
         {
@@ -52,14 +55,14 @@ namespace Capstone.Controllers
             bool userIsPremium = false;
             User user = userDAO.GetUser(userId);
             string userRole = user.Role;
-            if(userRole == "premium")
+            if (userRole == "premium")
             {
                 userIsPremium = true;
             }
             return userIsPremium;
         }
 
-      
+
 
         [HttpGet("collection")]
         public ActionResult<List<Collection>> ListOfCollection()
@@ -87,33 +90,60 @@ namespace Capstone.Controllers
             }
             else
             {
-                return Unauthorized(new {message = "Not owner of collection"});
+                return Unauthorized(new { message = "Not owner of collection" });
             }
         }
 
-       [HttpPost("collection/{id}")]
-       public ActionResult<ComicBook> AddComicToCollection(int id, ComicBook comicBook)
-       {
-            
+        [HttpPost("collection/{id}")]
+        public async Task<ActionResult<ComicBook>> AddComicToCollection(int id, ComicBook comicBook)
+        {
             int userId = GetUserIdFromToken();
             if (VerifyActiveUserOwnsCollection(id))
             {
+<<<<<<< HEAD
                 if (CheckUserRole(userId) || collectionDAO.UserTotalComicCount(userId) < 100  )
+=======
+                if (CheckUserRole(userId) || collectionDAO.UserTotalComicCount(userId) < 100)
+>>>>>>> ee844a9ce2ace392e0b980e7aa28dc174ca78480
                 {
-
-
                     try
                     {
-                        using (TransactionScope transaction = new TransactionScope())
+                        ComicBook existing = comicDAO.GetById(comicBook.Id);
+
+                        // Comic book is not in local database, get from API
+                        if (existing == null)
                         {
-                            bool isSuccessful = comicDAO.AddComicToCollection(id, comicBook);
-                            if (!isSuccessful)
+                            ComicVineFilters filters = new ComicVineFilters();
+                            filters.AddFilter("id", comicBook.Id.ToString());
+                            ComicVineIssueResponse response = await comicVine.GetIssues(filters);
+                            if (response.StatusCode != 1)
                             {
-                                return BadRequest(new { message = "Adding a comic was unsuccessful" });
+                                throw new ComicVineException($"Failed ComicVine request: {response.Error}");
                             }
-                            transaction.Complete();
+                            ComicBook issue = response.Results[0];
+                            using(TransactionScope scope = new TransactionScope())
+                            {
+                                bool addedComic = comicDAO.AddComic(issue);
+                                bool addedImages = comicDAO.AddImages(issue);
+                                if (addedComic && addedImages)
+                                {
+                                    scope.Complete();
+                                    existing = issue;
+                                }
+                                else
+                                {
+                                    throw new Exception("Failed to add new comic from ComicVine API");
+                                }
+                            }
                         }
+
+                        comicDAO.AddComicToCollection(id, existing);
+
                         return Created($"/user/collection/{id}", comicBook);
+                    }
+                    catch (ComicVineException e)
+                    {
+                        return StatusCode(502, new { message = $"Bad Gateway: 502 - {e.Message}" });
                     }
                     catch (Exception)
                     {
@@ -130,10 +160,10 @@ namespace Capstone.Controllers
                 return Unauthorized(new { message = "Not owner of collection" });
             }
 
-       }
+        }
 
-       [HttpPut("collection/{id}")]
-       public ActionResult<Collection> UpdateCollectionPrivacy(int id, Collection collection)
+        [HttpPut("collection/{id}")]
+        public ActionResult<Collection> UpdateCollectionPrivacy(int id, Collection collection)
         {
             Collection compareCollection = collectionDAO.GetSingleCollection(id);
             collection.UserID = compareCollection.UserID;
@@ -147,14 +177,10 @@ namespace Capstone.Controllers
                 }
                 try
                 {
-                    using (TransactionScope transaction = new TransactionScope())
+                    bool isSuccessful = collectionDAO.UpdateCollectionPrivacy(collection, privacyChange);
+                    if (!isSuccessful)
                     {
-                        bool isSuccessful = collectionDAO.UpdateCollectionPrivacy(collection, privacyChange);
-                        if (!isSuccessful)
-                        {
-                            return BadRequest(new { message = "Failed to update collection" });
-                        }
-                        transaction.Complete();
+                        return BadRequest(new { message = "Failed to update collection" });
                     }
                     return Created($"/user/collection/{collection.CollectionID}", collection);
                 }
@@ -163,12 +189,12 @@ namespace Capstone.Controllers
                     return BadRequest(new { message = "Could not update collection privacy" });
                 }
             }
-            else 
-            { 
-                return Unauthorized(new { message = "Unauthorized- Not user collection" });
+            else
+            {
+                return Unauthorized(new { message = "Unauthorized - Not user collection" });
             }
         }
-       
+
     }
-   
+
 }

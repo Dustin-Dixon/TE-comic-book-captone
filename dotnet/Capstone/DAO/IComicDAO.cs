@@ -9,6 +9,9 @@ namespace Capstone.DAO
     {
         List<ComicBook> ComicsInCollection(int collectionId);
         bool AddComicToCollection(int collectionId, ComicBook comicBook);
+        bool AddComic(ComicBook comicBook);
+        bool AddImages(ComicBook comicBook);
         List<ComicBook> LocalComicSearch(string searchTerm);
+        ComicBook GetById(int comicId);
     }
 }

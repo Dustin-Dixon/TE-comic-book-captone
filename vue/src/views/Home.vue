@@ -1,8 +1,6 @@
 <template>
   <v-container>
-    <h1 class="text-h1 text-center">
-      Welcome to <span class="red--text">POW</span>er Comics
-    </h1>
+    <v-img :src="require('@/assets/power_comics_logo.png')" max-height="400px" contain></v-img>
     <v-divider />
     <collection-carousel class="mt-1" />
   </v-container>

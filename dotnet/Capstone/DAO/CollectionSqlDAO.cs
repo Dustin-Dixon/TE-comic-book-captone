@@ -28,7 +28,7 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("SELECT c.collection_id, c.user_id, u.username, c.name, c.is_public FROM collections c JOIN users u ON c.user_id = u.user_id WHERE is_public = 1", conn);
+                    SqlCommand cmd = new SqlCommand("SELECT collection_id, user_id, name, is_public FROM collections WHERE is_public = 1", conn);
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
@@ -54,7 +54,7 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("SELECT c.collection_id, c.user_id, u.username, c.name, c.is_public FROM collections c JOIN users u ON c.user_id = u.user_id WHERE c.user_id = @user_id", conn);
+                    SqlCommand cmd = new SqlCommand("SELECT collection_id, user_id, name, is_public FROM collections WHERE user_id = @user_id", conn);
                     cmd.Parameters.AddWithValue("@user_id", userId);
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
@@ -128,7 +128,7 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("SELECT c.collection_id, c.user_id, u.username, c.name, c.is_public FROM collections c JOIN users u ON c.user_id = u.user_id WHERE c.collection_id = @id", conn);
+                    SqlCommand cmd = new SqlCommand("SELECT collection_id, user_id, name, is_public FROM collections WHERE collection_id = @id", conn);
                     cmd.Parameters.AddWithValue("@id", id);
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
@@ -210,7 +210,6 @@ namespace Capstone.DAO
             {
                 CollectionID = Convert.ToInt32(reader["collection_id"]),
                 UserID = Convert.ToInt32(reader["user_id"]),
-                Username = Convert.ToString(reader["username"]),
                 Name = Convert.ToString(reader["name"]),
                 Public = Convert.ToBoolean(reader["is_public"]),
             };
