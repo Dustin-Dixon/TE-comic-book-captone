@@ -96,7 +96,7 @@ namespace Capstone.DAO
 
         public bool UpdateCollectionPrivacy(Collection collection, int privacyChange)
         {
-            bool output = false;
+            int output = 0;
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -109,15 +109,14 @@ namespace Capstone.DAO
                     cmd.Parameters.AddWithValue("@collection_id", collection.CollectionID);
                     cmd.Parameters.AddWithValue("@privacyChange", privacyChange);
                     cmd.Parameters.AddWithValue("@name", collection.Name);
-                    cmd.ExecuteNonQuery();
-                    output = true;
+                    output = cmd.ExecuteNonQuery();
                 }
             }
             catch (SqlException)
             {
                 throw;
             }
-            return output;
+            return (output == 1);
         }
 
         public Collection GetSingleCollection(int id)
@@ -145,8 +144,62 @@ namespace Capstone.DAO
             }
             return collection;
         }
-    
 
+        /// <summary>
+        /// Sends the SQL database a query to retrieve the number of ComicBooks in
+        /// a collection with <paramref name="collectionId"/>.
+        /// </summary>
+        /// <param name="collectionId"></param>
+        /// <returns>The count of comics in the collection.</returns>
+        public int GetCountOfComicsInCollection(int collectionId)
+        {
+            int comicCount = -1;
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand("SELECT SUM(quantity) " +
+                                                    "FROM collections_comics " +
+                                                    "WHERE collection_id = @id; ", conn);
+                    cmd.Parameters.AddWithValue("@id", collectionId);
+                    comicCount = Convert.ToInt32(cmd.ExecuteScalar());
+                }
+            }
+            catch (SqlException)
+            {
+                throw;
+            }
+            return comicCount;
+        }
+
+        /// <summary>
+        /// Queries the SQL database to retrieve the total number of ComicBooks across
+        /// all collections for a user with <paramref name="userId"/>.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns>Count of all comics across all of the user's collections.</returns>
+        public int UserTotalComicCount(int userId)
+        {
+            int comicTotal = -1;
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand("", conn);
+                    cmd.Parameters.AddWithValue("@user_id", userId);
+                    comicTotal = Convert.ToInt32(cmd.ExecuteScalar());
+                }
+            }
+            catch (SqlException)
+            {
+                throw;
+            }
+            return comicTotal;
+        }
 
         private Collection GetCollectionFromReader(SqlDataReader reader)
         {

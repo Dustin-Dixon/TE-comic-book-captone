@@ -4,6 +4,6 @@ namespace Capstone.Services
 {
     public interface IComicVineService
     {
-        public Task<string> GetIssuesInVolume(int volumeId);
+        public Task<ComicVineIssueResponse> GetIssues(ComicVineFilters filter);
     }
 }

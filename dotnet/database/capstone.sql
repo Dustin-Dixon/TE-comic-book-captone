@@ -34,10 +34,11 @@ CREATE TABLE collections (
 );
 
 CREATE TABLE comics (
-	comic_id int IDENTITY(1,1) NOT NULL,
+	comic_id int NOT NULL,
 	name varchar(100) NOT NULL,
-	author varchar (100) NOT NULL,
-	release_date date NOT NULL
+	issue_number varchar (5) NOT NULL,
+	cover_date date NOT NULL,
+	detail_url varchar (255) NOT NULL
 	CONSTRAINT PK_comics PRIMARY KEY (comic_id)
 );
 
@@ -84,11 +85,8 @@ SET IDENTITY_INSERT collections OFF;
 
 --------Comics Rows------------------------------------
 
-SET IDENTITY_INSERT comics ON;
-
-INSERT INTO comics (comic_id, name, author, release_date) VALUES (1, 'Spiderman', 'Stan Lee', '1962-06-05');
-INSERT INTO comics (comic_id, name, author, release_date) VALUES (2, 'TestHero', 'Some Body', '2021-04-06');
-SET IDENTITY_INSERT comics OFF;
+INSERT INTO comics (comic_id, name, issue_number, cover_date, detail_url) VALUES (1, 'Spiderman', '12', '1962-06-05', 'https://comicvine.gamespot.com/chamber-of-chills-magazine-13-the-lost-race/4000-6/');
+INSERT INTO comics (comic_id, name, issue_number, cover_date, detail_url) VALUES (2, 'TestHero', '40', '2021-04-06', 'https://comicvine.gamespot.com/black-diamond-western-39/4000-11/');
 
 --------Collections_comics Rows------------------------
 
