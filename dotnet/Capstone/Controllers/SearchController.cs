@@ -15,7 +15,7 @@ namespace Capstone.Controllers
             this.comicVine = comicVineService;
         }
 
-        [HttpGet("/issues")]
+        [HttpGet("issues")]
         public async Task<ActionResult<ComicVineIssueResponse>> SearchIssues(string name, int issueId, int volumeId)
         {
             ComicVineFilters filter = new ComicVineFilters();
