@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-carousel v-if="!loading">
+    <v-carousel v-if="!loading" cycle show-arrows-on-hover>
       <v-carousel-item
         v-for="collection in collections"
         :key="collection.collectionID"
