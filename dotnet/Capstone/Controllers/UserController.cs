@@ -47,6 +47,20 @@ namespace Capstone.Controllers
             return userOwns;
         }
 
+        private bool CheckUserRole(int userId)
+        {
+            bool userIsPremium = false;
+            User user = userDAO.GetUser(userId);
+            string userRole = user.Role;
+            if(userRole == "premium")
+            {
+                userIsPremium = true;
+            }
+            return userIsPremium;
+        }
+
+      
+
         [HttpGet("collection")]
         public ActionResult<List<Collection>> ListOfCollection()
         {
@@ -80,24 +94,35 @@ namespace Capstone.Controllers
        [HttpPost("collection/{id}")]
        public ActionResult<ComicBook> AddComicToCollection(int id, ComicBook comicBook)
        {
+            
+            int userId = GetUserIdFromToken();
             if (VerifyActiveUserOwnsCollection(id))
             {
-                try
+                if (CheckUserRole(userId) || collectionDAO.UserTotalComicCount(userId) < 100 )
                 {
-                    using (TransactionScope transaction = new TransactionScope())
+
+
+                    try
                     {
-                        bool isSuccessful = comicDAO.AddComicToCollection(id, comicBook);
-                        if (!isSuccessful)
+                        using (TransactionScope transaction = new TransactionScope())
                         {
-                            return BadRequest(new { message = "Adding a comic was unsuccessful" });
+                            bool isSuccessful = comicDAO.AddComicToCollection(id, comicBook);
+                            if (!isSuccessful)
+                            {
+                                return BadRequest(new { message = "Adding a comic was unsuccessful" });
+                            }
+                            transaction.Complete();
                         }
-                        transaction.Complete();
+                        return Created($"/user/collection/{id}", comicBook);
                     }
-                    return Created($"/user/collection/{id}", comicBook);
+                    catch (Exception)
+                    {
+                        return BadRequest(new { message = "Could not add comic to collection" });
+                    }
                 }
-                catch (Exception)
+                else
                 {
-                    return BadRequest(new { message = "Could not add comic to collection" });
+                    return BadRequest(new { message = "Need premium status to add more than 100 comics across all your collections." });
                 }
             }
             else
