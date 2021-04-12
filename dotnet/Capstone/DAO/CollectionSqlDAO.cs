@@ -174,6 +174,33 @@ namespace Capstone.DAO
             return comicCount;
         }
 
+        /// <summary>
+        /// Queries the SQL database to retrieve the total number of ComicBooks across
+        /// all collections for a user with <paramref name="userId"/>.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns>Count of all comics across all of the user's collections.</returns>
+        public int UserTotalComicCount(int userId)
+        {
+            int comicTotal = -1;
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand("", conn);
+                    cmd.Parameters.AddWithValue("@user_id", userId);
+                    comicTotal = Convert.ToInt32(cmd.ExecuteScalar());
+                }
+            }
+            catch (SqlException)
+            {
+                throw;
+            }
+            return comicTotal;
+        }
+
         private Collection GetCollectionFromReader(SqlDataReader reader)
         {
             Collection c = new Collection()
