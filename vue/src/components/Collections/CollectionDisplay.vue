@@ -8,46 +8,14 @@
 
     <v-row>
       <v-col cols="3" v-for="comic in comics" :key="comic.comicID">
-        <comic-card :comic="comic"></comic-card>
+        <comic-card :comic="comic" />
       </v-col>
     </v-row>
 
     <v-dialog v-model="dialog" max-width="500px">
       <v-card>
         <v-card-text>
-          <v-text-field label="Comic Name" v-model="newComic.name" />
-          <v-text-field label="Author" v-model="newComic.author" />
-          <v-menu
-            ref="menu"
-            v-model="menu"
-            :close-on-content-click="false"
-            :return-value.sync="newComic.releaseDate"
-            transition="scale-transition"
-            offset-y
-            min-width="auto"
-          >
-            <template v-slot:activator="{ on, attrs }">
-              <v-text-field
-                v-model="newComic.releaseDate"
-                label="Release Date"
-                prepend-icon="mdi-calendar"
-                readonly
-                v-bind="attrs"
-                v-on="on"
-              ></v-text-field>
-            </template>
-            <v-date-picker v-model="newComic.releaseDate" no-title scrollable>
-              <v-spacer></v-spacer>
-              <v-btn text color="primary" @click="menu = false"> Cancel </v-btn>
-              <v-btn
-                text
-                color="primary"
-                @click="$refs.menu.save(newComic.releaseDate)"
-              >
-                OK
-              </v-btn>
-            </v-date-picker>
-          </v-menu>
+          <v-text-field label="Search for a Comic" v-model="searchTerms" />
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -69,7 +37,7 @@ export default {
     return {
       dialog: false,
       menu: false,
-      newComic: { name: "", author: "", releaseDate: "" },
+      searchTerms: "",
     };
   },
   methods: {
