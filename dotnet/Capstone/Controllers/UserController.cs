@@ -17,13 +17,15 @@ namespace Capstone.Controllers
         private readonly ICollectionDAO collectionDAO;
         private readonly IComicDAO comicDAO;
         private readonly IComicVineService comicVine;
+        private readonly ICharacterDAO characterDAO;
 
-        public UserController(ICollectionDAO collectionDAO, IComicDAO comicDAO, IComicVineService comicVine, IUserDAO userDAO)
+        public UserController(ICollectionDAO collectionDAO, IComicDAO comicDAO, IComicVineService comicVine, IUserDAO userDAO, ICharacterDAO characterDAO)
         {
             this.collectionDAO = collectionDAO;
             this.comicDAO = comicDAO;
             this.comicVine = comicVine;
             this.userDAO = userDAO;
+            this.characterDAO = characterDAO;
         }
         private int GetUserIdFromToken()
         {
@@ -117,8 +119,19 @@ namespace Capstone.Controllers
                                 throw new ComicVineException($"Failed ComicVine request: {response.Error}");
                             }
                             ComicBook issue = response.Results[0];
+                            CVSingleIssueResponse issueCharAndCreators = await comicVine.GetIssueDetails(issue.ApiDetailUrl);
+                            List<Character> characters = issueCharAndCreators.Results.CharacterCredits;
+                            characterDAO.CheckDatabaseForCharacters(characters);
+
                             using(TransactionScope scope = new TransactionScope())
                             {
+                                for (int i = 0; i < characters.Count; i++)
+                                {
+                                    if (characters[i].InDatabase)
+                                    {
+
+                                    }
+                                }
                                 bool addedComic = comicDAO.AddComic(issue);
                                 bool addedImages = comicDAO.AddImages(issue);
                                 if (addedComic && addedImages)
