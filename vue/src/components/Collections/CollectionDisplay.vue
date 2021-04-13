@@ -7,7 +7,7 @@
     >
     <v-row>
       <v-col cols="3" v-for="comic in comics" :key="comic.id">
-        <comic-card :comic="comic" :height="cardHeight" />
+        <comic-card :comic="comic" :height="cardHeight" :showInfo="showInfo"/>
       </v-col>
     </v-row>
   </v-container>
@@ -28,6 +28,10 @@ export default {
     addComic: {
       type: Function,
     },
+    showInfo: {
+      type: Boolean,
+      default: true,
+    }
   },
   computed: {
     cardHeight() {

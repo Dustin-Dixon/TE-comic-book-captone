@@ -9,7 +9,7 @@
       </v-row>
       <v-divider class="my-5"/>
       <v-row>
-        <collection-display :comics="firstFourComics" />
+        <collection-display :comics="firstFourComics" :showInfo="false" />
       </v-row>
     </v-container>
   </v-sheet>

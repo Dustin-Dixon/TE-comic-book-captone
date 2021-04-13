@@ -5,17 +5,15 @@
     <div class="text-center">{{ comic.name }} #{{comic.issueNumber}}</div>
     </v-card-text> -->
 
-      <comic-detail :comic="comic" />
-
+    <comic-detail :comic="comic" v-if="showInfo" />
   </v-card>
 </template>
 
 <script>
-
-import ComicDetail from "./ComicDetail.vue"
+import ComicDetail from "./ComicDetail.vue";
 
 export default {
-  props: ["comic", "height"],
-  components: {ComicDetail},
+  props: ["comic", "height", "showInfo"],
+  components: { ComicDetail },
 };
 </script>

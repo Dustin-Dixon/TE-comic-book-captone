@@ -18,6 +18,7 @@
                 :comic="comic"
                 height="100px"
                 @click="saveClickedComic(comic)"
+                :showInfo="true"
               />
             </v-col>
           </v-row>
