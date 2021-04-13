@@ -7,7 +7,7 @@
     >
     <v-row>
       <v-col cols="3" v-for="comic in comics" :key="comic.id">
-        <comic-card :comic="comic" />
+        <comic-card :comic="comic" :height="cardHeight" />
       </v-col>
     </v-row>
   </div>
@@ -27,6 +27,22 @@ export default {
     },
     addComic: {
       type: Function,
+    },
+  },
+  computed: {
+    cardHeight() {
+      switch (this.$vuetify.breakpoint.name) {
+        case "xs":
+          return "150px";
+        case "sm":
+          return "200px";
+        case "md":
+          return "300px";
+        case "lg":
+          return "350px";
+        default:
+          return "400px";
+      }
     },
   },
 };

@@ -12,8 +12,8 @@
       </v-card-text>
       <v-card-actions>
         <v-row>
-          <v-col cols="2" v-for="comic in searchResults" :key="comic.comicID">
-            <comic-card :comic="comic" />
+          <v-col cols="3" v-for="comic in searchResults" :key="comic.comicID">
+            <comic-card :comic="comic" height="100px" />
           </v-col>
         </v-row>
       </v-card-actions>
@@ -22,7 +22,10 @@
 </template>
 
 <script>
-const debounce = require("lodash.debounce");
+import ComicCard from "../ComicCard"
+
+import debounce from "lodash.debounce";
+import ComicService from "@/services/ComicService";
 
 export default {
   data() {
@@ -36,11 +39,14 @@ export default {
   },
   methods: {
     onChangeSearch() {
-      console.log("Key Pressed");
       this.debouncedSearch();
     },
     doLocalSearch() {
-      console.log("Search");
+      ComicService.searchLocalComics(this.searchTerms).then((response) => {
+        if (response.status === 200) {
+            this.searchResults = response.data;
+        }
+      });
     },
   },
   computed: {
@@ -56,5 +62,8 @@ export default {
     },
   },
   props: ["visible"],
+  components: {
+      ComicCard
+  }
 };
 </script>
