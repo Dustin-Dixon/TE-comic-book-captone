@@ -100,11 +100,7 @@ namespace Capstone.Controllers
             int userId = GetUserIdFromToken();
             if (VerifyActiveUserOwnsCollection(id))
             {
-<<<<<<< HEAD
                 if (CheckUserRole(userId) || collectionDAO.UserTotalComicCount(userId) < 100  )
-=======
-                if (CheckUserRole(userId) || collectionDAO.UserTotalComicCount(userId) < 100)
->>>>>>> ee844a9ce2ace392e0b980e7aa28dc174ca78480
                 {
                     try
                     {

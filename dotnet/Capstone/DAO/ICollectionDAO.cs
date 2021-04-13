@@ -11,5 +11,7 @@ namespace Capstone.DAO
         bool UpdateCollectionPrivacy(Collection collection, int privacyChange);
         Collection GetSingleCollection(int id);
         int UserTotalComicCount(int userId);
+        int GetCountOfComicsInCollection(int collectionId);
+        int GetCountOfComicsInAllCollections();
     }
 }
