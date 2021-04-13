@@ -26,12 +26,13 @@ namespace Capstone.DAO
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    conn.Open();
+                    conn.Open();               
 
                     SqlCommand cmd = new SqlCommand("SELECT c.collection_id, c.user_id, u.username, c.name, c.is_public " +
                                                     "FROM collections c " +
                                                     "JOIN users u ON c.user_id = u.user_id " +
                                                     "WHERE is_public = 1", conn);
+
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
@@ -56,6 +57,7 @@ namespace Capstone.DAO
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
+
 
                     SqlCommand cmd = new SqlCommand("SELECT c.collection_id, c.user_id, u.username, c.name, c.is_public " +
                                                     "FROM collections c " +
@@ -138,6 +140,7 @@ namespace Capstone.DAO
                                                     "FROM collections c " +
                                                     "JOIN users u ON c.user_id = u.user_id " +
                                                     "WHERE c.collection_id = @id", conn);
+
                     cmd.Parameters.AddWithValue("@id", id);
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
@@ -173,6 +176,28 @@ namespace Capstone.DAO
                                                     "FROM collections_comics " +
                                                     "WHERE collection_id = @id; ", conn);
                     cmd.Parameters.AddWithValue("@id", collectionId);
+                    comicCount = Convert.ToInt32(cmd.ExecuteScalar());
+                }
+            }
+            catch (SqlException)
+            {
+                throw;
+            }
+            return comicCount;
+        }
+
+        public int GetCountOfComicsInAllCollections()
+        {
+            int comicCount = -1;
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand("SELECT SUM(quantity) as NumberOfComicsInAllCollections " +
+                                                    "FROM collections_comics; ", conn);
+
                     comicCount = Convert.ToInt32(cmd.ExecuteScalar());
                 }
             }
@@ -219,7 +244,6 @@ namespace Capstone.DAO
             {
                 CollectionID = Convert.ToInt32(reader["collection_id"]),
                 UserID = Convert.ToInt32(reader["user_id"]),
-                Username = Convert.ToString(reader["username"]),
                 Name = Convert.ToString(reader["name"]),
                 Public = Convert.ToBoolean(reader["is_public"]),
             };

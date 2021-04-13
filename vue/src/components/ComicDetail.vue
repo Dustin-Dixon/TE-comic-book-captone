@@ -1,28 +1,19 @@
 <template>
-  <v-card
-    v-model="showDetail"
-    :close-on-content-click="false"
-    :nudge-width="200"
-    offset-x
-    elevation="2"
-  >
+  <v-menu v-model="showDetail" :nudge-width="200" offset-x elevation="2">
     <template v-slot:activator="{ on, attrs }">
-      <v-btn
-        icon
-        v-on="on"
-        v-bind="attrs"
-        @click="newCollection = { ...comic }"
-      >
-        <v-icon>mdi-info-outline</v-icon>
+      <v-btn icon v-on="on" v-bind="attrs" @click="comicDetails = { ...comic }">
+        <v-icon>mdi-information-outline</v-icon>
       </v-btn>
     </template>
-    <v-img :src="comic.image.mediumUrl"></v-img>
-    <v-card-title align="center">{{ comic.name }}</v-card-title>
-    <v-card-text>
-      <div>Issue Number: {{ comic.issueNumber }}</div>
-      <div>Cover Date: {{ comic.coverDate }}</div>
-    </v-card-text>
-  </v-card>
+    <v-card>
+      <v-img :src="comic.image.mediumUrl" :height="`${imageHeight}px`" contain></v-img>
+      <v-card-title align="center">{{ comic.name }}</v-card-title>
+      <v-card-text>
+        <div>Issue Number: {{ comic.issueNumber }}</div>
+        <div>Cover Date: {{ comic.coverDate }}</div>
+      </v-card-text>
+    </v-card>
+  </v-menu>
 </template>
 
 <script>
@@ -39,6 +30,22 @@ export default {
         coverDate: "",
       },
     };
+  },
+  computed: {
+    imageHeight() {
+      switch (this.$vuetify.breakpoint.name) {
+        case "xs":
+          return 200;
+        case "sm":
+          return 250;
+        case "md":
+          return 350;
+        case "lg":
+          return 400;
+        default:
+          return 450;
+      }
+    },
   },
 };
 </script>

@@ -29,6 +29,13 @@ namespace Capstone.Controllers
             return Ok(allPublicCollections);
         }
 
+        [HttpGet("collection/statistics")]
+        public ActionResult<int> GetNumberOfComicsInCollections()
+        {
+            int overallNumber = collectionDAO.GetCountOfComicsInAllCollections();
+            return Ok(overallNumber);
+        } 
+
         [HttpGet("collection/{id}")]
         public ActionResult<List<ComicBook>> ComicsInPublicCollection(int id)
         {
