@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card @click="$emit('click')">
     <v-img :src="comic.image.mediumUrl" :height="height"></v-img>
     <!-- <v-card-text>
     <div class="text-center">{{ comic.name }} #{{comic.issueNumber}}</div>

@@ -23,6 +23,7 @@
     <add-comic
       :visible="addDialog"
       @close="addDialog = false"
+      :saveComic="addComicToCollection"
     />
   </v-container>
 </template>
