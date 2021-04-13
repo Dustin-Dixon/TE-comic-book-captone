@@ -6,6 +6,7 @@ import Login from '../views/Login.vue'
 import Logout from '../views/Logout.vue'
 import Register from '../views/Register.vue'
 import store from '../store/index'
+import PublicCollection from '../views/PublicCollection.vue'
 
 Vue.use(Router)
 
@@ -36,6 +37,14 @@ const router = new Router({
       component: MyCollections,
       meta: {
         requiresAuth: true
+      }
+    },
+    {
+      path: '/public-collection/:id',
+      name: 'public-collection',
+      component: PublicCollection,
+      meta: {
+        requiresAuth: false
       }
     },
     {

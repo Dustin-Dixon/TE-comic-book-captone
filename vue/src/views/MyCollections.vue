@@ -57,7 +57,7 @@ export default {
     },
     selectCollection(selectedCollection) {
       this.selectedCollection = selectedCollection;
-      CollectionService.getComicsInCollection(selectedCollection).then(
+      CollectionService.getComicsInCollection(selectedCollection.collectionID).then(
         (response) => {
           if (response.status === 200) {
             this.comics = response.data;

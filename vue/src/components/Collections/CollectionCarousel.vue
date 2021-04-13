@@ -4,6 +4,7 @@
       <v-carousel-item
         v-for="collection in collections"
         :key="collection.collectionID"
+        :to="{ name: 'public-collection', params: {id: collection.collectionID} }"
       >
         <collection-preview :collection="collection" />
       </v-carousel-item>

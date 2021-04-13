@@ -1,13 +1,15 @@
 <template>
+<v-container>
   <v-card>
     <v-img :src="comic.image.mediumUrl" :height="height"></v-img>
     <!-- <v-card-text>
     <div class="text-center">{{ comic.name }} #{{comic.issueNumber}}</div>
     </v-card-text> -->
-    <v-card-actions>
+
       <comic-detail :comic="comic" />
-    </v-card-actions>
+
   </v-card>
+</v-container>
 </template>
 
 <script>
