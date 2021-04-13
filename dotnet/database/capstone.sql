@@ -57,8 +57,8 @@ CREATE TABLE collections_comics (
 	comic_id int NOT NULL,
 	quantity int NOT NULL DEFAULT 1
 	CONSTRAINT PK_collections_comics PRIMARY KEY (collection_id, comic_id)
-	CONSTRAINT FK_collections_id FOREIGN KEY (collection_id) REFERENCES collections (collection_id),
-	CONSTRAINT FK_comics_id FOREIGN KEY (comic_id) REFERENCES comics (comic_id)
+	CONSTRAINT FK_collections_comics_collections_id FOREIGN KEY (collection_id) REFERENCES collections (collection_id),
+	CONSTRAINT FK_collections_comics_comics_id FOREIGN KEY (comic_id) REFERENCES comics (comic_id)
 );
 
 CREATE TABLE comic_creators (
@@ -72,9 +72,38 @@ CREATE TABLE comic_creators_contributions (
 	comic_id int NOT NULL,
 	creator_id int NOT NULL,
 	CONSTRAINT PK_comic_creators_contributions PRIMARY KEY (comic_id,creator_id),
-	CONSTRAINT FK_creator_id FOREIGN KEY (creator_id) REFERENCES comic_creators (creator_id),
-	CONSTRAINT FK_comic_id FOREIGN KEY (comic_id) REFERENCES comics (comic_id)
-	);
+	CONSTRAINT FK_comic_creators_contributions_creators_id FOREIGN KEY (creator_id) REFERENCES comic_creators (creator_id),
+	CONSTRAINT FK_comic_creators_contributions_comics_id FOREIGN KEY (comic_id) REFERENCES comics (comic_id)
+);
+
+CREATE TABLE characters (
+	character_id int NOT NULL,
+	name varchar (100) NOT NULL,
+	publisher varchar (100) NOT NULL,
+	CONSTRAINT PK_characters PRIMARY KEY (character_id)
+);
+
+CREATE TABLE comic_characters (
+	comic_id int NOT NULL,
+	character_id int NOT NULL,
+	CONSTRAINT PK_comic_characters PRIMARY KEY (comic_id,character_id),
+	CONSTRAINT FK_comic_characters_comic_id FOREIGN KEY (comic_id) REFERENCES comics (comic_id),
+	CONSTRAINT FK_comic_characters_character_id FOREIGN KEY (character_id) REFERENCES characters (character_id)
+);
+
+CREATE TABLE tags (
+	tag_id int NOT NULL,
+	tag_description varchar (100) NOT NULL,
+	CONSTRAINT PK_tags PRIMARY KEY (tag_id)
+);
+
+CREATE TABLE comic_tags (
+	tag_id int NOT NULL,
+	comic_id int NOT NULL,
+	CONSTRAINT PK_comic_tags PRIMARY KEY (tag_id,comic_id),
+	CONSTRAINT FK_comic_tags_tag_id FOREIGN KEY (tag_id) REFERENCES tags (tag_id),
+	CONSTRAINT FK_comic_tags_comic_id FOREIGN KEY (comic_id) REFERENCES comics (comic_id)
+);
 
 --------Users Row--------------------------------------
 
