@@ -74,11 +74,11 @@ namespace Capstone.DAO
                     {
                         conn.Open();
 
-                        SqlCommand cmd = new SqlCommand("SELECT creator_id " +
+                        SqlCommand cmd = new SqlCommand("SELECT COUNT(creator_id) " +
                                                         "FROM comic_creators " +
                                                         "WHERE creator_id = @creator_id;", conn);
                         cmd.Parameters.AddWithValue("@creator_id", creators[i].Id);
-                        isFound = cmd.ExecuteNonQuery();
+                        isFound = Convert.ToInt32(cmd.ExecuteScalar());
                     }
                 }
                 catch (SqlException)

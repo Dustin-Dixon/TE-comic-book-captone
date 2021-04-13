@@ -103,11 +103,11 @@ namespace Capstone.DAO
                     {
                         conn.Open();
 
-                        SqlCommand cmd = new SqlCommand("SELECT character_id " +
+                        SqlCommand cmd = new SqlCommand("SELECT COUNT(character_id) " +
                                                         "FROM characters " +
                                                         "WHERE character_id = @character_id;", conn);
                         cmd.Parameters.AddWithValue("@character_id", characters[i].Id);
-                        isFound = cmd.ExecuteNonQuery();
+                        isFound = Convert.ToInt32(cmd.ExecuteScalar());
                     }
                 }
                 catch (SqlException)

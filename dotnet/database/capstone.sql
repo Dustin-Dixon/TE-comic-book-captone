@@ -37,7 +37,7 @@ CREATE TABLE comics (
 	comic_id int NOT NULL,
 	name varchar(100) NOT NULL,
 	issue_number varchar (5) NOT NULL,
-	cover_date date NOT NULL,
+	cover_date date NULL,
 	site_detail_url varchar (255) NOT NULL,
 	api_detail_url varchar (255) NOT NULL
 	CONSTRAINT PK_comics PRIMARY KEY (comic_id)
