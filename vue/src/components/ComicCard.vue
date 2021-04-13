@@ -4,9 +4,9 @@
     <!-- <v-card-text>
     <div class="text-center">{{ comic.name }} #{{comic.issueNumber}}</div>
     </v-card-text> -->
-    <v-card-actions>
+
       <comic-detail :comic="comic" />
-    </v-card-actions>
+
   </v-card>
 </template>
 
