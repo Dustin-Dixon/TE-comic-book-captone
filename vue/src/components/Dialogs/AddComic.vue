@@ -11,18 +11,20 @@
         <v-divider />
       </v-card-text>
       <v-card-actions>
-        <v-row>
-          <v-col cols="3" v-for="comic in searchResults" :key="comic.comicID">
-            <comic-card :comic="comic" height="100px" />
-          </v-col>
-        </v-row>
+        <v-container>
+          <v-row>
+            <v-col cols="3" v-for="comic in searchResults" :key="comic.comicID">
+              <comic-card :comic="comic" height="100px" />
+            </v-col>
+          </v-row>
+        </v-container>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
 <script>
-import ComicCard from "../ComicCard"
+import ComicCard from "../ComicCard";
 
 import debounce from "lodash.debounce";
 import ComicService from "@/services/ComicService";
@@ -45,7 +47,7 @@ export default {
     doLocalSearch() {
       ComicService.searchLocalComics(this.searchTerms).then((response) => {
         if (response.status === 200) {
-            this.searchResults = response.data;
+          this.searchResults = response.data;
         }
       });
     },
@@ -58,7 +60,7 @@ export default {
       set(value) {
         if (!value) {
           this.$emit("close");
-          this.searchTerms="";
+          this.searchTerms = "";
           this.doLocalSearch();
         }
       },
@@ -66,7 +68,7 @@ export default {
   },
   props: ["visible"],
   components: {
-      ComicCard
-  }
+    ComicCard,
+  },
 };
 </script>
