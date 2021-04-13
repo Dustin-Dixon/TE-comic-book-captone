@@ -54,13 +54,13 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("INSERT INTO comics (comic_id, name, issue_number, cover_date, detail_url) " +
-                                                    "VALUES (@comic_id, @name, @issue_number, @cover_date, @detail_url)", conn);
+                    SqlCommand cmd = new SqlCommand("INSERT INTO comics (comic_id, name, issue_number, cover_date,  site_detail_url) " +
+                                                    "VALUES (@comic_id, @name, @issue_number, @cover_date, @site_detail_url)", conn);
                     cmd.Parameters.AddWithValue("@comic_id", comicBook.Id);
                     cmd.Parameters.AddWithValue("@name", comicBook.Name);
                     cmd.Parameters.AddWithValue("@issue_number", comicBook.IssueNumber);
                     cmd.Parameters.AddWithValue("@cover_date", comicBook.CoverDate);
-                    cmd.Parameters.AddWithValue("@detail_url", comicBook.SiteDetailUrl);
+                    cmd.Parameters.AddWithValue("@site_detail_url", comicBook.SiteDetailUrl);
                     isSuccessful = cmd.ExecuteNonQuery();
                 }
             }
@@ -114,7 +114,7 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("SELECT com.comic_id, com.name, com.issue_number, com.cover_date, com.detail_url, " +
+                    SqlCommand cmd = new SqlCommand("SELECT com.comic_id, com.name, com.issue_number, com.cover_date, com.site_detail_url, " +
                                                     "icon_url, small_url, medium_url, thumb_url " +
                                                     "FROM comics com " +
                                                     "INNER JOIN comic_images ci ON ci.comic_id = com.comic_id " +
@@ -148,7 +148,7 @@ namespace Capstone.DAO
                     conn.Open();
 
                     SqlCommand cmd = new SqlCommand("SELECT TOP (50) com.comic_id, com.name, com.issue_number, com.cover_date, " +
-                                                    "com.detail_url, ci.icon_url, ci.small_url, ci.medium_url, ci.thumb_url " +
+                                                    "com.site_detail_url, ci.icon_url, ci.small_url, ci.medium_url, ci.thumb_url " +
                                                     "FROM comics com " +
                                                     "INNER JOIN comic_images ci ON ci.comic_id = com.comic_id " +
                                                     "WHERE name LIKE @searchTerm OR issue_number LIKE @searchTerm " +
@@ -179,7 +179,7 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("SELECT comic_id, name, issue_number, cover_date, detail_url " +
+                    SqlCommand cmd = new SqlCommand("SELECT comic_id, name, issue_number, cover_date, site_detail_url " +
                                                     "FROM comics " +
                                                     "WHERE comic_id = @id", conn);
                     cmd.Parameters.AddWithValue("@id", comicId);
@@ -205,7 +205,7 @@ namespace Capstone.DAO
                 Name = Convert.ToString(reader["name"]),
                 IssueNumber = Convert.ToString(reader["issue_number"]),
                 CoverDate = Convert.ToString(reader["cover_date"]),
-                SiteDetailUrl = Convert.ToString(reader["detail_url"]),
+                SiteDetailUrl = Convert.ToString(reader["site_detail_url"]),
                 Image = new ComicImages
                 {
                     ComicId = Convert.ToInt32(reader["comic_id"]),
