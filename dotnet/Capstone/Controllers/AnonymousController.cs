@@ -36,7 +36,7 @@ namespace Capstone.Controllers
             return Ok(overallNumber);
         } 
 
-        [HttpGet("collection/{id}")]
+        [HttpGet("collection/{id}/comic")]
         public ActionResult<List<ComicBook>> ComicsInPublicCollection(int id)
         {
             Collection collection = collectionDAO.GetSingleCollection(id);
@@ -48,6 +48,20 @@ namespace Capstone.Controllers
             else
             {
                 return Unauthorized(new {message = "This collection is private"});
+            }
+        }
+
+        [HttpGet("collection/{id}")]
+        public ActionResult<Collection> GetSpecificCollection (int id)
+        {
+            Collection collection = collectionDAO.GetSingleCollection(id);
+            if (collection.Public)
+            {
+                return Ok(collection);
+            }
+            else
+            {
+                return Unauthorized(new { message = "This collection is private" });
             }
         }
     }
