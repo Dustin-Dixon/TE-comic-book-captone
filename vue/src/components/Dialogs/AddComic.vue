@@ -73,7 +73,7 @@ export default {
     },
     searchOnline() {
       this.disableOnlineSearch = true;
-      ComicService.searchOnline(this.searchTerms)
+      ComicService.searchOnline(this.searchTerms, this.searchTerms)
         .then((response) => {
           if (response.status === 200) {
             this.searchResults = response.data.results;
