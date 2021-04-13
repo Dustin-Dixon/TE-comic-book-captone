@@ -25,6 +25,7 @@
         left
         fixed
         @click="showAddDialog = !showAddDialog"
+        id="addButton"
       >
         <v-icon>mdi-plus</v-icon>
       </v-btn>
@@ -81,3 +82,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+#addButton {
+  bottom: 45px;
+}
+</style>
