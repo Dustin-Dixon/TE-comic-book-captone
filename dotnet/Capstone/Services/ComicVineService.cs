@@ -38,5 +38,19 @@ namespace Capstone.Services
                 throw new ComicVineException($"Unsuccessful request to ComicVineAPI: Status {response.StatusCode} - {response.StatusDescription}");
             }
         }
+
+        public async Task<CVSingleIssueResponse> GetIssueDetails(string comic_api_url)
+        {
+            IRestRequest request = new RestRequest(SliceComicApiUrl(comic_api_url));
+            IRestResponse<CVSingleIssueResponse> response = await client.ExecuteGetAsync<CVSingleIssueResponse>(request);
+            HandleError(response);
+            return response.Data;
+        }
+
+        private string SliceComicApiUrl(string comic_api_url)
+        {
+            string slice = comic_api_url.Substring(35);
+            return slice;
+        }
     }
 }

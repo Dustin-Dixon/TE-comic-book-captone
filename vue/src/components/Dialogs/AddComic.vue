@@ -14,7 +14,7 @@
         <v-container>
           <v-row>
             <v-col cols="3" v-for="comic in searchResults" :key="comic.comicID">
-              <comic-card :comic="comic" height="100px" />
+              <comic-card :comic="comic" height="100px" @click="saveClickedComic(comic)"/>
             </v-col>
           </v-row>
         </v-container>
@@ -51,6 +51,10 @@ export default {
         }
       });
     },
+    saveClickedComic(comic) {
+      this.saveComic(comic);
+      this.show = false;
+    },
   },
   computed: {
     show: {
@@ -66,7 +70,7 @@ export default {
       },
     },
   },
-  props: ["visible"],
+  props: ["visible", "saveComic"],
   components: {
     ComicCard,
   },

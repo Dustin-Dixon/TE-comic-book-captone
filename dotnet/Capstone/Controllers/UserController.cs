@@ -17,13 +17,15 @@ namespace Capstone.Controllers
         private readonly ICollectionDAO collectionDAO;
         private readonly IComicDAO comicDAO;
         private readonly IComicVineService comicVine;
+        private readonly ICharacterDAO characterDAO;
 
-        public UserController(ICollectionDAO collectionDAO, IComicDAO comicDAO, IComicVineService comicVine, IUserDAO userDAO)
+        public UserController(ICollectionDAO collectionDAO, IComicDAO comicDAO, IComicVineService comicVine, IUserDAO userDAO, ICharacterDAO characterDAO)
         {
             this.collectionDAO = collectionDAO;
             this.comicDAO = comicDAO;
             this.comicVine = comicVine;
             this.userDAO = userDAO;
+            this.characterDAO = characterDAO;
         }
         private int GetUserIdFromToken()
         {
@@ -86,6 +88,10 @@ namespace Capstone.Controllers
             if (VerifyActiveUserOwnsCollection(id))
             {
                 List<ComicBook> comicsInCollection = comicDAO.ComicsInCollection(id);
+                foreach (ComicBook comic in comicsInCollection)
+                {
+                    comic.Characters = characterDAO.GetCharacterListForComicBook(comic.Id);
+                }
                 return Ok(comicsInCollection);
             }
             else
@@ -117,14 +123,31 @@ namespace Capstone.Controllers
                                 throw new ComicVineException($"Failed ComicVine request: {response.Error}");
                             }
                             ComicBook issue = response.Results[0];
+                            CVSingleIssueResponse issueCharAndCreators = await comicVine.GetIssueDetails(issue.ApiDetailUrl);
+                            List<Character> characters = issueCharAndCreators.Results.CharacterCredits;
+                            characterDAO.CheckDatabaseForCharacters(characters);
+
                             using(TransactionScope scope = new TransactionScope())
                             {
                                 bool addedComic = comicDAO.AddComic(issue);
                                 bool addedImages = comicDAO.AddImages(issue);
+                                for (int i = 0; i < characters.Count; i++)
+                                {
+                                    if (!characters[i].InDatabase)
+                                    {
+                                        bool addedChar = characterDAO.AddCharacterToTable(characters[i]);
+                                        bool addedCharToLinker = characterDAO.LinkCharacterToComic(characters[i].Id, issue.Id);
+                                        if (!addedChar || !addedCharToLinker)
+                                        {
+                                            throw new Exception("Failed to add character from ComicVine API");
+                                        }
+                                    }
+                                }
                                 if (addedComic && addedImages)
                                 {
                                     scope.Complete();
                                     existing = issue;
+                                    comicBook.Characters = characters;
                                 }
                                 else
                                 {

@@ -244,6 +244,7 @@ namespace Capstone.DAO
             {
                 CollectionID = Convert.ToInt32(reader["collection_id"]),
                 UserID = Convert.ToInt32(reader["user_id"]),
+                Username = Convert.ToString(reader["username"]),
                 Name = Convert.ToString(reader["name"]),
                 Public = Convert.ToBoolean(reader["is_public"]),
             };

@@ -14,5 +14,7 @@ namespace Capstone.Models
         public string SiteDetailUrl { get; set; }
         public string ApiDetailUrl { get; set; }
         public ComicImages Image { get; set; }
+        public List<Character> Characters { get; set; }
+        public List<Creator> Creators { get; set; }
     }
 }

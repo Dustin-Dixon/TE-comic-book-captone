@@ -180,9 +180,11 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("SELECT comic_id, name, issue_number, cover_date, site_detail_url, api_detail_url " +
-                                                    "FROM comics " +
-                                                    "WHERE comic_id = @id", conn);
+                    SqlCommand cmd = new SqlCommand("SELECT com.comic_id, com.name, com.issue_number, com.cover_date, " +
+                                                    "com.site_detail_url, com.api_detail_url, ci.icon_url, ci.small_url, ci.medium_url, ci.thumb_url " +
+                                                    "FROM comics com " +
+                                                    "INNER JOIN comic_images ci ON ci.comic_id = com.comic_id " +
+                                                    "WHERE com.comic_id = @id", conn);
                     cmd.Parameters.AddWithValue("@id", comicId);
                     SqlDataReader reader = cmd.ExecuteReader();
                     if (reader.Read())
@@ -215,7 +217,8 @@ namespace Capstone.DAO
                     SmallUrl = Convert.ToString(reader["small_url"]),
                     MediumUrl = Convert.ToString(reader["medium_url"]),
                     ThumbUrl = Convert.ToString(reader["thumb_url"])
-                }
+                },
+                Characters = new List<Character>()
             };
 
             return cb;
