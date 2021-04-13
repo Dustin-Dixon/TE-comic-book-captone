@@ -2,58 +2,23 @@
   <div>
     <v-row v-if="addComic"
       ><v-col align="center"
-        ><v-btn @click="dialog = !dialog">Add Comic</v-btn></v-col
+        ><v-btn @click="addComic">Add Comic</v-btn></v-col
       ></v-row
     >
-
     <v-row>
-      <v-col cols="3" v-for="comic in comics" :key="comic.comicID">
+      <v-col cols="3" v-for="comic in comics" :key="comic.id">
         <comic-card :comic="comic" />
       </v-col>
     </v-row>
-
-    <v-dialog v-model="dialog" max-width="500px">
-      <v-card>
-        <v-card-text>
-          <v-text-field label="Search for a Comic" v-model="searchTerms" @input="onChangeSearch"/>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn text color="primary" @click="saveComic"> Submit </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
   </div>
 </template>
 
 <script>
 import ComicCard from "../ComicCard.vue";
-import debounce from "lodash.debounce";
 
 export default {
   components: {
     ComicCard,
-  },
-  data() {
-    return {
-      dialog: false,
-      menu: false,
-      searchTerms: "",
-    };
-  },
-  methods: {
-    saveComic() {
-      this.addComic(this.newComic);
-      this.newComic = { name: "", author: "", releaseDate: "" };
-      this.dialog = false;
-    },
-    onChangeSearch() {
-      console.log("Key Pressed");
-      this.debouncedSearch();
-    },
-    searchLocal() {
-      console.log("Search Performed");
-    }
   },
   props: {
     comics: {
@@ -64,8 +29,5 @@ export default {
       type: Function,
     },
   },
-  created() {
-    this.debouncedSearch = debounce(this.searchLocal, 500);
-  }
 };
 </script>
