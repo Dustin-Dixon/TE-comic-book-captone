@@ -121,6 +121,35 @@ namespace Capstone.DAO
             }
         }
 
+        public List<Character> GetCharacterListForComicBook(int comicId)
+        {
+            List<Character> charsInComic = new List<Character>();
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand("SELECT ch.character_id, ch.name " +
+                                                    "FROM characters ch " +
+                                                    "INNER JOIN comic_characters cc ON cc.character_id = ch.character_id " +
+                                                    "INNER JOIN comics com ON com.comic_id = cc.comic_id " +
+                                                    "WHERE com.comic_id = @comic_id;", conn);
+                    cmd.Parameters.AddWithValue("@comic_id", comicId);
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        charsInComic.Add(GetCharacterFromReader(reader));
+                    }
+                }
+            }
+            catch (SqlException)
+            {
+                throw;
+            }
+            return charsInComic;
+        }
+
         private Character GetCharacterFromReader(SqlDataReader reader)
         {
             Character c = new Character

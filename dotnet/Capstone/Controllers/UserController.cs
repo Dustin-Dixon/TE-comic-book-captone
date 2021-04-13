@@ -88,6 +88,10 @@ namespace Capstone.Controllers
             if (VerifyActiveUserOwnsCollection(id))
             {
                 List<ComicBook> comicsInCollection = comicDAO.ComicsInCollection(id);
+                foreach (ComicBook comic in comicsInCollection)
+                {
+                    comic.Characters = characterDAO.GetCharacterListForComicBook(comic.Id);
+                }
                 return Ok(comicsInCollection);
             }
             else
@@ -125,19 +129,25 @@ namespace Capstone.Controllers
 
                             using(TransactionScope scope = new TransactionScope())
                             {
-                                for (int i = 0; i < characters.Count; i++)
-                                {
-                                    if (characters[i].InDatabase)
-                                    {
-
-                                    }
-                                }
                                 bool addedComic = comicDAO.AddComic(issue);
                                 bool addedImages = comicDAO.AddImages(issue);
+                                for (int i = 0; i < characters.Count; i++)
+                                {
+                                    if (!characters[i].InDatabase)
+                                    {
+                                        bool addedChar = characterDAO.AddCharacterToTable(characters[i]);
+                                        bool addedCharToLinker = characterDAO.LinkCharacterToComic(characters[i].Id, issue.Id);
+                                        if (!addedChar || !addedCharToLinker)
+                                        {
+                                            throw new Exception("Failed to add character from ComicVine API");
+                                        }
+                                    }
+                                }
                                 if (addedComic && addedImages)
                                 {
                                     scope.Complete();
                                     existing = issue;
+                                    comicBook.Characters = characters;
                                 }
                                 else
                                 {
