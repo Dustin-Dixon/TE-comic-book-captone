@@ -15,7 +15,7 @@
     <v-dialog v-model="dialog" max-width="500px">
       <v-card>
         <v-card-text>
-          <v-text-field label="Search for a Comic" v-model="searchTerms" />
+          <v-text-field label="Search for a Comic" v-model="searchTerms" @input="onChangeSearch"/>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -28,6 +28,7 @@
 
 <script>
 import ComicCard from "../ComicCard.vue";
+import debounce from "lodash.debounce";
 
 export default {
   components: {
@@ -46,6 +47,13 @@ export default {
       this.newComic = { name: "", author: "", releaseDate: "" };
       this.dialog = false;
     },
+    onChangeSearch() {
+      console.log("Key Pressed");
+      this.debouncedSearch();
+    },
+    searchLocal() {
+      console.log("Search Performed");
+    }
   },
   props: {
     comics: {
@@ -56,5 +64,8 @@ export default {
       type: Function,
     },
   },
+  created() {
+    this.debouncedSearch = debounce(this.searchLocal, 500);
+  }
 };
 </script>
