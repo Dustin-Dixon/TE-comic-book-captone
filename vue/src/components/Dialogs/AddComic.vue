@@ -14,7 +14,22 @@
         <v-container>
           <v-row>
             <v-col cols="3" v-for="comic in searchResults" :key="comic.comicID">
-              <comic-card :comic="comic" height="100px" @click="saveClickedComic(comic)"/>
+              <comic-card
+                :comic="comic"
+                height="100px"
+                @click="saveClickedComic(comic)"
+              />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col align="center">
+              Can't find your comic?
+              <v-btn
+                class="ml-2"
+                @click="searchOnline"
+                :disabled="disableOnlineSearch"
+                >Search Online</v-btn
+              >
             </v-col>
           </v-row>
         </v-container>
@@ -34,6 +49,7 @@ export default {
     return {
       searchTerms: "",
       searchResults: [],
+      disableOnlineSearch: false,
     };
   },
   created() {
@@ -54,6 +70,18 @@ export default {
     saveClickedComic(comic) {
       this.saveComic(comic);
       this.show = false;
+    },
+    searchOnline() {
+      this.disableOnlineSearch = true;
+      ComicService.searchOnline(this.searchTerms)
+        .then((response) => {
+          if (response.status === 200) {
+            this.searchResults = response.data.results;
+          }
+        })
+        .finally(() => {
+          this.disableOnlineSearch = true;
+        });
     },
   },
   computed: {
