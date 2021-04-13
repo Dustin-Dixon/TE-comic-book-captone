@@ -36,6 +36,7 @@ export default {
   },
   created() {
     this.debouncedSearch = debounce(this.doLocalSearch, 500);
+    this.doLocalSearch();
   },
   methods: {
     onChangeSearch() {
@@ -57,6 +58,8 @@ export default {
       set(value) {
         if (!value) {
           this.$emit("close");
+          this.searchTerms="";
+          this.doLocalSearch();
         }
       },
     },
