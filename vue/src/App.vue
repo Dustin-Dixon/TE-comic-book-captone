@@ -13,6 +13,7 @@
     <v-main>
       <router-view />
     </v-main>
+    <v-footer>POWer Comics &copy;2021</v-footer>
   </v-app>
 </template>
 
