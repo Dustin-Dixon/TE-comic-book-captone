@@ -14,8 +14,9 @@
 <script>
 import CollectionDisplay from "../components/Collections/CollectionDisplay.vue";
 import CollectionService from "../services/CollectionService.js";
+
 export default {
-  components: { CollectionDisplay, CollectionService },
+  components: { CollectionDisplay },
   data() {
     return {
       comics: [],
