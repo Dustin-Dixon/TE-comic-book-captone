@@ -1,7 +1,7 @@
 <template>
   <v-app>
-    <v-app-bar app color="primary" dark>
-      <v-btn class="mx-1" :to="{ name: 'home' }" icon exact text depressed><v-img src="../public/power_comics_icon.png" height="50px" contain/></v-btn>
+    <v-app-bar app color="primary">
+      <v-btn id="home-button" :ripple="false" class="ml-1 mr-2" :to="{ name: 'home' }" icon exact large><v-img src="../public/power_comics_icon.png" height="40px" contain/></v-btn>
       <v-btn :to="{ name: 'my-collections' }" text v-if="loggedIn"
         >Collections</v-btn
       >
@@ -27,3 +27,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+#home-button::before {
+  background-color: transparent;
+}
+</style>
