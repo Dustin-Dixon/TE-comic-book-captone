@@ -23,5 +23,13 @@ export default {
 
     getPublicCollections() {
         return axios.get("/anonymous/collection");
+    },
+
+    getComicsInPublicCollection(collectionID) {
+        return axios.get(`anonymous/collection/${collectionID}/comic`);
+    },
+
+    getPubliCollectionFromID(collectionID) {
+        return axios.get(`anonymous/collection/${collectionID}`);
     }
 }

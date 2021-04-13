@@ -21,7 +21,7 @@ export default {
         }
     },
     created () {
-        CollectionService.getComicsInCollection(this.collectionID).then(
+        CollectionService.getComicsInPublicCollection(this.collectionID).then(
         (response) => {
           if (response.status === 200) {
             this.comics = response.data;
