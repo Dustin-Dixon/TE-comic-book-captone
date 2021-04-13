@@ -80,7 +80,7 @@ export default {
           }
         })
         .finally(() => {
-          this.disableOnlineSearch = true;
+          this.disableOnlineSearch = false;
         });
     },
   },
