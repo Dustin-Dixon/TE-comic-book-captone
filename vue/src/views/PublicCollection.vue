@@ -3,7 +3,8 @@
     <v-row>
       <v-col>
         <h3 class="text-h3 text-center">{{ collection.name }}</h3>
-        <h4 class="text-h4 text-center">By: {{ collection.username }}</h4>
+        <v-divider class="my-2" />
+        <h5 class="text-h4 text-center mb-2">By: {{ collection.username }}</h5>
       </v-col>
     </v-row>
     <collection-display :comics="comics" />
