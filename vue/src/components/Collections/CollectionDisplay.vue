@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <v-container>
     <v-row v-if="addComic"
       ><v-col align="center"
         ><v-btn @click="addComic">Add Comic</v-btn></v-col
@@ -10,7 +10,7 @@
         <comic-card :comic="comic" :height="cardHeight" />
       </v-col>
     </v-row>
-  </div>
+  </v-container>
 </template>
 
 <script>
