@@ -41,6 +41,55 @@ namespace Capstone.DAO
             return (isSuccessful == 1);
         }
 
+        public int GetComicQuantityInCollection(int collectionId, int comicId)
+        {
+            int quantity = 0;
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand("SELECT quantity " +
+                                                    "FROM collections_comics " +
+                                                    "WHERE collection_id = @collection_id && comic_id = @comic_id;", conn);
+                    cmd.Parameters.AddWithValue("@collection_id", collectionId);
+                    cmd.Parameters.AddWithValue("@comic_id", comicId);
+                    quantity = Convert.ToInt32(cmd.ExecuteScalar());
+                }
+            }
+            catch (SqlException)
+            {
+                throw;
+            }
+            return quantity;
+        }
+
+        public bool UpdateQuantityOfComicInCollection(int collectionId, int comicId, int quantity)
+        {
+            int isSuccessful = 0;
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand("UPDATE collections_comics " +
+                                                    "SET quantity = @quantity " +
+                                                    "WHERE collection_id = @collection_id && comic_id = @comic_id;", conn);
+                    cmd.Parameters.AddWithValue("@collection_id", collectionId);
+                    cmd.Parameters.AddWithValue("@comic_id", comicId);
+                    cmd.Parameters.AddWithValue("@quantity", quantity);
+                    isSuccessful = cmd.ExecuteNonQuery();
+                }
+            }
+            catch (SqlException)
+            {
+                throw;
+            }
+            return (isSuccessful == 1);
+        }
+
         /// <summary>
         /// Adds <paramref name="comicBook"/> to the comics table in the SQL database.
         /// </summary>
