@@ -21,20 +21,16 @@ namespace Capstone.Controllers
         }
 
         [HttpGet("issues")]
-        public async Task<ActionResult<ComicVineIssueResponse>> SearchIssues(string name, int issueId, int volumeId)
+        public async Task<ActionResult<ComicVineIssueResponse>> SearchIssues(string name,string description)
         {
             ComicVineFilters filter = new ComicVineFilters();
             if (name != null)
             {
                 filter.AddFilter("name", name);
             }
-            if (issueId != 0)
+            if (description != null)
             {
-                filter.AddFilter("id", issueId.ToString());
-            }
-            if (volumeId != 0)
-            {
-                filter.AddFilter("volume", volumeId.ToString());
+                filter.AddFilter("description", description);
             }
             ComicVineIssueResponse response = await comicVine.GetIssues(filter);
             return Ok(response);
