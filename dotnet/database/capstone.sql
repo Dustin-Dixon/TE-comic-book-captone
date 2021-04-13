@@ -80,7 +80,6 @@ CREATE TABLE comic_creators_contributions (
 CREATE TABLE characters (
 	character_id int NOT NULL,
 	name varchar (100) NOT NULL,
-	publisher varchar (100) NOT NULL,
 	CONSTRAINT PK_characters PRIMARY KEY (character_id)
 );
 
