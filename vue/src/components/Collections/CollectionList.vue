@@ -23,7 +23,7 @@
         color="primary"
         bottom
         left
-        absolute
+        fixed
         @click="showAddDialog = !showAddDialog"
       >
         <v-icon>mdi-plus</v-icon>
