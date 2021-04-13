@@ -38,7 +38,8 @@ CREATE TABLE comics (
 	name varchar(100) NOT NULL,
 	issue_number varchar (5) NOT NULL,
 	cover_date date NOT NULL,
-	detail_url varchar (255) NOT NULL
+	site_detail_url varchar (255) NOT NULL,
+	api_detail_url varchar (255) NOT NULL
 	CONSTRAINT PK_comics PRIMARY KEY (comic_id)
 );
 
@@ -124,10 +125,10 @@ SET IDENTITY_INSERT collections OFF;
 
 --------Comics Rows------------------------------------
 
-INSERT INTO comics (comic_id, name, issue_number, cover_date, detail_url) VALUES (20596, 'Spiderman & Howard the Duck', '96', '1980-08-31', 'https://comicvine.gamespot.com/marvel-team-up-96-spiderman-howard-the-duck/4000-20596/');
-INSERT INTO comics (comic_id, name, issue_number, cover_date, detail_url) VALUES (20736, 'Spiderman & Black Widow', '98', '1980-10-31', 'https://comicvine.gamespot.com/black-diamond-western-39/4000-11/');
-INSERT INTO comics (comic_id, name, issue_number, cover_date, detail_url) VALUES (544648, 'Universo Spiderman', '1', '2015-07-31', 'https://comicvine.gamespot.com/100-marvel-spiderwoman-1-universo-spiderman/4000-544648/');
-INSERT INTO comics (comic_id, name, issue_number, cover_date, detail_url) VALUES (4767, 'The Second Batman and Robin Team', '131', '1960-04-01', 'https://comicvine.gamespot.com/batman-131-the-second-batman-and-robin-team/4000-4767/');
+INSERT INTO comics (comic_id, name, issue_number, cover_date, site_detail_url, api_detail_url) VALUES (20596, 'Spiderman & Howard the Duck', '96', '1980-08-31', 'https://comicvine.gamespot.com/marvel-team-up-96-spiderman-howard-the-duck/4000-20596/', 'https://comicvine.gamespot.com/api/issue/4000-20596/');
+INSERT INTO comics (comic_id, name, issue_number, cover_date, site_detail_url, api_detail_url) VALUES (20736, 'Spiderman & Black Widow', '98', '1980-10-31', 'https://comicvine.gamespot.com/black-diamond-western-39/4000-11/', 'https://comicvine.gamespot.com/api/issue/4000-20736/');
+INSERT INTO comics (comic_id, name, issue_number, cover_date, site_detail_url, api_detail_url) VALUES (544648, 'Universo Spiderman', '1', '2015-07-31', 'https://comicvine.gamespot.com/100-marvel-spiderwoman-1-universo-spiderman/4000-544648/', 'https://comicvine.gamespot.com/api/issue/4000-544648/');
+INSERT INTO comics (comic_id, name, issue_number, cover_date, site_detail_url, api_detail_url) VALUES (4767, 'The Second Batman and Robin Team', '131', '1960-04-01', 'https://comicvine.gamespot.com/batman-131-the-second-batman-and-robin-team/4000-4767/', 'https://comicvine.gamespot.com/api/issue/4000-4767/');
 
 --------Comic_Images Rows------------------------------
 

@@ -12,6 +12,7 @@ namespace Capstone.Models
         public string IssueNumber { get; set; }
         public string CoverDate { get; set; }
         public string SiteDetailUrl { get; set; }
+        public string ApiDetailUrl { get; set; }
         public ComicImages Image { get; set; }
     }
 }

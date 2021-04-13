@@ -7,16 +7,23 @@
     </v-row>
     <v-row>
       <v-col cols="3">
-          <collection-list
-            :collections="collections"
-            :saveCollection="saveCollection"
-            :changeSelected="selectCollection"
-          />
+        <collection-list
+          :collections="collections"
+          :saveCollection="saveCollection"
+          :changeSelected="selectCollection"
+        />
       </v-col>
       <v-col>
-        <collection-display :addComic="addComicToCollection" :comics="comics" />
+        <collection-display
+          :addComic="() => (addDialog = !addDialog)"
+          :comics="comics"
+        />
       </v-col>
     </v-row>
+    <add-comic
+      :visible="addDialog"
+      @close="addDialog = false"
+    />
   </v-container>
 </template>
 
@@ -24,17 +31,20 @@
 import CollectionList from "../components/Collections/CollectionList.vue";
 import CollectionDisplay from "../components/Collections/CollectionDisplay.vue";
 
+import AddComic from "../components/Dialogs/AddComic.vue";
+
 import CollectionService from "../services/CollectionService";
 
 export default {
   name: "MyCollections",
-  components: { CollectionList, CollectionDisplay },
+  components: { CollectionList, CollectionDisplay, AddComic },
   data() {
     return {
       error: "",
       collections: [],
       comics: [],
       selectedCollection: {},
+      addDialog: false,
     };
   },
   methods: {
