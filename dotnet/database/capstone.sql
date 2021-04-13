@@ -63,9 +63,8 @@ CREATE TABLE collections_comics (
 );
 
 CREATE TABLE comic_creators (
-	creator_id int IDENTITY(1,1) NOT NULL,
-	first_name varchar(100) NOT NULL,
-	last_name varchar(100) NOT NULL,
+	creator_id int NOT NULL,
+	name varchar(100) NOT NULL,
 	CONSTRAINT PK_comic_creators PRIMARY KEY (creator_id)
 );
 	
@@ -146,10 +145,10 @@ INSERT INTO collections_comics (collection_id, comic_id, quantity) VALUES (1, 47
 
 
 --------Comic_creator Rows-----------------------------
-SET IDENTITY_INSERT comic_creators ON;
-INSERT INTO comic_creators (creator_id, first_name, last_name) VALUES (1, 'Stan', 'Lee');
-INSERT INTO comic_creators (creator_id, first_name, last_name) VALUES (2, 'LeBron', 'James');
-SET IDENTITY_INSERT comic_creators OFF;
+
+INSERT INTO comic_creators (creator_id, name) VALUES (1, 'Stan Lee');
+INSERT INTO comic_creators (creator_id, name) VALUES (2, 'LeBron James');
+
 
 --------Comic_creator_contributions Rows---------------
 

@@ -18,14 +18,16 @@ namespace Capstone.Controllers
         private readonly IComicDAO comicDAO;
         private readonly IComicVineService comicVine;
         private readonly ICharacterDAO characterDAO;
+        private readonly ICreatorDAO creatorDAO;
 
-        public UserController(ICollectionDAO collectionDAO, IComicDAO comicDAO, IComicVineService comicVine, IUserDAO userDAO, ICharacterDAO characterDAO)
+        public UserController(ICollectionDAO collectionDAO, IComicDAO comicDAO, IComicVineService comicVine, IUserDAO userDAO, ICharacterDAO characterDAO, ICreatorDAO creatorDAO)
         {
             this.collectionDAO = collectionDAO;
             this.comicDAO = comicDAO;
             this.comicVine = comicVine;
             this.userDAO = userDAO;
             this.characterDAO = characterDAO;
+            this.creatorDAO = creatorDAO;
         }
         private int GetUserIdFromToken()
         {
@@ -126,6 +128,9 @@ namespace Capstone.Controllers
                             CVSingleIssueResponse issueCharAndCreators = await comicVine.GetIssueDetails(issue.ApiDetailUrl);
                             List<Character> characters = issueCharAndCreators.Results.CharacterCredits;
                             characterDAO.CheckDatabaseForCharacters(characters);
+                            List<Creator> creators = issueCharAndCreators.Results.PersonCredits;
+                            creatorDAO.CheckDatabaseForCreators(creators);
+                            
 
                             using(TransactionScope scope = new TransactionScope())
                             {
@@ -136,18 +141,46 @@ namespace Capstone.Controllers
                                     if (!characters[i].InDatabase)
                                     {
                                         bool addedChar = characterDAO.AddCharacterToTable(characters[i]);
-                                        bool addedCharToLinker = characterDAO.LinkCharacterToComic(characters[i].Id, issue.Id);
-                                        if (!addedChar || !addedCharToLinker)
+                                       
+                                        if (!addedChar)
                                         {
                                             throw new Exception("Failed to add character from ComicVine API");
                                         }
+
+                                    }
+                                    bool addedCharToLinker = characterDAO.LinkCharacterToComic(characters[i].Id, issue.Id);
+                                    if (!addedCharToLinker)
+                                    {
+                                        throw new Exception("Failed to add character to linker table");
                                     }
                                 }
+
+                                for(int i = 0; i < creators.Count; i++)
+                                {
+                                    if (!creators[i].InDatabase)
+                                    {
+                                        bool addedCreator = creatorDAO.AddCreatorCreditToTable(creators[i]);
+                                       
+                                        if (!addedCreator)
+                                        {
+                                            throw new Exception("Failed to add creator credit from ComicVine API");
+                                        }
+                                        
+                                    }
+                                    bool addedCreatorToLinker = creatorDAO.LinkCreatorToComic(creators[i].Id, issue.Id);
+                                  
+                                    if (!addedCreatorToLinker)
+                                    {
+                                        throw new Exception("Failed to add creator to linker table");
+                                    }
+                                }
+
                                 if (addedComic && addedImages)
                                 {
                                     scope.Complete();
                                     existing = issue;
                                     comicBook.Characters = characters;
+                                    comicBook.Creators = creators;
                                 }
                                 else
                                 {
@@ -164,9 +197,9 @@ namespace Capstone.Controllers
                     {
                         return StatusCode(502, new { message = $"Bad Gateway: 502 - {e.Message}" });
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        return BadRequest(new { message = "Could not add comic to collection" });
+                        return BadRequest(new { message = $"Could not add comic to collection - {e.Message}" });
                     }
                 }
                 else

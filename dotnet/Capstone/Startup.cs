@@ -68,6 +68,7 @@ namespace Capstone
             services.AddTransient<IComicDAO>(m => new ComicSqlDAO(connectionString));
             services.AddTransient<IComicVineService>(m => new ComicVineService(Configuration["ComicVine:API_KEY"]));
             services.AddTransient<ICharacterDAO>(m => new CharacterSqlDAO(connectionString));
+            services.AddTransient<ICreatorDAO>(m => new CreatorSqlDAO(connectionString));
         }
 
 
