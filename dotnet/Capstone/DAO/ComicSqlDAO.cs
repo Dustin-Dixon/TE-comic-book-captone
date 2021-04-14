@@ -40,7 +40,7 @@ namespace Capstone.DAO
             }
             return (isSuccessful == 1);
         }
-        public bool DeleteComicFromCollection(int collectionId,ComicBook comicBook)
+        public bool DeleteComicFromCollection(int collectionId, int comicId)
         {
             int isSuccessful = 0;
             try
@@ -49,12 +49,11 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("DELETE collection_id, comic_id, quantity " +
+                    SqlCommand cmd = new SqlCommand("DELETE " +
                                                     "FROM collections_comics " +
-                                                    "WHERE collection_id = @collection_id && comic_id = @comid_id && quantity = @quantity; ", conn);
+                                                    "WHERE collection_id = @collection_id AND comic_id = @comic_id; ", conn);
                     cmd.Parameters.AddWithValue("@collection_id", collectionId);
-                    cmd.Parameters.AddWithValue("@comic_id", comicBook.Id);
-                    cmd.Parameters.AddWithValue("@quantity", 1);
+                    cmd.Parameters.AddWithValue("@comic_id", comicId);
                     isSuccessful = cmd.ExecuteNonQuery();
                 }
             }
@@ -79,7 +78,15 @@ namespace Capstone.DAO
                                                     "WHERE collection_id = @collection_id AND comic_id = @comic_id;", conn);
                     cmd.Parameters.AddWithValue("@collection_id", collectionId);
                     cmd.Parameters.AddWithValue("@comic_id", comicId);
-                    quantity = Convert.ToInt32(cmd.ExecuteScalar());
+
+                    object result = cmd.ExecuteScalar();
+                    if (Convert.IsDBNull(result))
+                    {
+                        quantity = 0;
+                    } else
+                    {
+                        quantity = Convert.ToInt32(result);
+                    }
                 }
             }
             catch (SqlException)

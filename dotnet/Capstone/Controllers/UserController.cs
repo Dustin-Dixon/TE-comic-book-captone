@@ -214,26 +214,24 @@ namespace Capstone.Controllers
 
         }
 
-        [HttpDelete("collection/{id}")]
-        public ActionResult<Collection> DeleteComicFromCollection(int id, ComicBook comicBook)
+        [HttpDelete("collection/{collectionId}/comic/{comicId}")]
+        public ActionResult<Collection> DeleteComicFromCollection(int collectionId, int comicId)
         {
-            int userId = GetUserIdFromToken();
-            if (VerifyActiveUserOwnsCollection(id))
+            if (VerifyActiveUserOwnsCollection(collectionId))
             {
                 try
                 { 
                     //get quantity of comic book in collection
-                    int totalComicQuantity = comicDAO.GetComicQuantityInCollection(id, comicBook.Id);
+                    int totalComicQuantity = comicDAO.GetComicQuantityInCollection(collectionId, comicId);
                     if (totalComicQuantity == 1)
                     {
-                        comicDAO.DeleteComicFromCollection(id, comicBook);
-                        return Ok(comicDAO.ComicsInCollection(id));
-    
+                        comicDAO.DeleteComicFromCollection(collectionId, comicId);
+                        return Ok();
                     }
                     else
                     {
-                        comicDAO.UpdateQuantityOfComicInCollection(id, comicBook.Id, -1);
-                        return Ok(comicDAO.ComicsInCollection(id));
+                        comicDAO.UpdateQuantityOfComicInCollection(collectionId, comicId, totalComicQuantity-1);
+                        return Ok();
                     }
                 }
                 catch(Exception e)
@@ -246,9 +244,6 @@ namespace Capstone.Controllers
             {
                 return Unauthorized(new { message = "Not owner of collection" });
             }
-
-
-
         }
 
         [HttpPut("collection/{id}")]

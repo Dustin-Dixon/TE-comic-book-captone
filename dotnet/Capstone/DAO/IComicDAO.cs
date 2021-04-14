@@ -9,7 +9,7 @@ namespace Capstone.DAO
     {
         List<ComicBook> ComicsInCollection(int collectionId);
         bool AddComicToCollection(int collectionId, ComicBook comicBook);
-        public bool DeleteComicFromCollection(int collectionId, ComicBook comicBook);
+        public bool DeleteComicFromCollection(int collectionId, int comicId);
         public int GetComicQuantityInCollection(int collectionId, int comicId);
         bool AddComic(ComicBook comicBook);
         bool AddImages(ComicBook comicBook);
