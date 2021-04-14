@@ -31,5 +31,9 @@ export default {
 
     getPubliCollectionFromID(collectionID) {
         return axios.get(`anonymous/collection/${collectionID}`);
+    },
+
+    deleteComicFromCollection(collectionID,comicID) {
+        return axios.delete(`user/collection/${collectionID}/comic/${comicID}`)
     }
 }

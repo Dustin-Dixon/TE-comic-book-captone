@@ -7,7 +7,7 @@
     >
     <v-row>
       <v-col cols="3" v-for="comic in comics" :key="comic.id">
-        <comic-card :comic="comic" :height="cardHeight" :showInfo="showInfo"/>
+        <comic-card @delete="$emit('delete', $event)" :comic="comic" :height="cardHeight" :showInfo="showInfo"/>
       </v-col>
     </v-row>
   </v-container>

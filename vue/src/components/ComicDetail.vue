@@ -12,6 +12,7 @@
         <div>Issue Number: {{ comic.issueNumber }}</div>
         <div>Cover Date: {{ comic.coverDate }}</div>
       </v-card-text>
+      <v-btn @click="$emit('delete', comic)">Remove Comic</v-btn>
     </v-card>
   </v-menu>
 </template>

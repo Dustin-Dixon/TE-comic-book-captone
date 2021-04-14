@@ -15,6 +15,7 @@
       </v-col>
       <v-col>
         <collection-display
+          @delete="deleteComic"
           :addComic="() => (addDialog = !addDialog)"
           :comics="comics"
         />
@@ -58,13 +59,13 @@ export default {
     },
     selectCollection(selectedCollection) {
       this.selectedCollection = selectedCollection;
-      CollectionService.getComicsInCollection(selectedCollection.collectionID).then(
-        (response) => {
-          if (response.status === 200) {
-            this.comics = response.data;
-          }
+      CollectionService.getComicsInCollection(
+        selectedCollection.collectionID
+      ).then((response) => {
+        if (response.status === 200) {
+          this.comics = response.data;
         }
-      );
+      });
     },
     addComicToCollection(newComic) {
       CollectionService.addComicToCollection(
@@ -73,6 +74,16 @@ export default {
       ).then((response) => {
         if (response.status === 201) {
           this.comics.push(response.data);
+        }
+      });
+    },
+    deleteComic(comic) {
+      CollectionService.deleteComicFromCollection(
+        this.selectedCollection.collectionID,
+        comic.id
+      ).then((response) => {
+        if (response.status === 200){
+          this.selectCollection(this.selectedCollection);
         }
       });
     },
