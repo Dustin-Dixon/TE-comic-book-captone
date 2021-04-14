@@ -12,6 +12,11 @@
               <v-list-item-title v-text="collection.name" />
             </v-list-item-content>
             <v-list-item-action>
+              <v-btn icon :collection="collection">
+                <v-icon>mdi-trash-can</v-icon>
+              </v-btn>
+            </v-list-item-action>
+            <v-list-item-action>
               <settings-menu :collection="collection" />
             </v-list-item-action>
           </v-list-item>

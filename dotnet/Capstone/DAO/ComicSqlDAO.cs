@@ -66,7 +66,7 @@ namespace Capstone.DAO
 
         public int GetComicQuantityInCollection(int collectionId, int comicId)
         {
-            int quantity = 0;
+            int quantity = -1;
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -78,12 +78,12 @@ namespace Capstone.DAO
                                                     "WHERE collection_id = @collection_id AND comic_id = @comic_id;", conn);
                     cmd.Parameters.AddWithValue("@collection_id", collectionId);
                     cmd.Parameters.AddWithValue("@comic_id", comicId);
-
                     object result = cmd.ExecuteScalar();
                     if (Convert.IsDBNull(result))
                     {
                         quantity = 0;
-                    } else
+                    }
+                    else
                     {
                         quantity = Convert.ToInt32(result);
                     }
@@ -93,6 +93,7 @@ namespace Capstone.DAO
             {
                 throw;
             }
+
             return quantity;
         }
 
