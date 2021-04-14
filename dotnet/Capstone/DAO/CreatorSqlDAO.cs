@@ -92,6 +92,36 @@ namespace Capstone.DAO
             }
         }
 
+        public List<Creator> GetComicCreators(int comicId)
+        {
+            List<Creator> creators = new List<Creator>();
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(
+                        "SELECT c.creator_id, c.name FROM comic_creators c " +
+                        "JOIN comic_creators_contributions co ON co.creator_id = c.creator_id " +
+                        "WHERE co.comic_id = @comic_id; ", conn);
+                    cmd.Parameters.AddWithValue("@comic_id", comicId);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        creators.Add(GetCreatorFromReader(reader));
+                    }
+                }
+            }
+            catch (SqlException)
+            {
+                throw;
+            }
+            return creators;
+        }
+
         private Creator GetCreatorFromReader(SqlDataReader reader)
         {
             Creator c = new Creator

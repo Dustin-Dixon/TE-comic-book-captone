@@ -9,6 +9,6 @@ namespace Capstone.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public bool InDatabase { get; set; }
+        internal bool InDatabase { get; set; } = false;
     }
 }
