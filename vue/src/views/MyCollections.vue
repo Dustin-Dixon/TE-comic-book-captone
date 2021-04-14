@@ -73,6 +73,8 @@ export default {
       ).then((response) => {
         if (response.status === 201) {
           this.comics.push(response.data);
+          this.selectedCollection.comicCount += 1;
+          this.$store.dispatch('ADD_COMIC');
         }
       });
     },
