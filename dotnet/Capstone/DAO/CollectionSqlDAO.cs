@@ -176,7 +176,16 @@ namespace Capstone.DAO
                                                     "FROM collections_comics " +
                                                     "WHERE collection_id = @id; ", conn);
                     cmd.Parameters.AddWithValue("@id", collectionId);
-                    comicCount = Convert.ToInt32(cmd.ExecuteScalar());
+
+                    object result = cmd.ExecuteScalar();
+                    if (Convert.IsDBNull(result))
+                    {
+                        comicCount = 0;
+                    }
+                    else
+                    {
+                        comicCount = Convert.ToInt32(result);
+                    }
                 }
             }
             catch (SqlException)
@@ -198,7 +207,15 @@ namespace Capstone.DAO
                     SqlCommand cmd = new SqlCommand("SELECT SUM(quantity) as NumberOfComicsInAllCollections " +
                                                     "FROM collections_comics; ", conn);
 
-                    comicCount = Convert.ToInt32(cmd.ExecuteScalar());
+                    object result = cmd.ExecuteScalar();
+                    if (Convert.IsDBNull(result))
+                    {
+                        comicCount = 0;
+                    }
+                    else
+                    {
+                        comicCount = Convert.ToInt32(result);
+                    }
                 }
             }
             catch (SqlException)
@@ -228,7 +245,16 @@ namespace Capstone.DAO
                                                     "JOIN collections ON collections.collection_id = collections_comics.collection_id " +
                                                     "WHERE user_id = @user_id; ", conn);
                     cmd.Parameters.AddWithValue("@user_id", userId);
-                    comicTotal = Convert.ToInt32(cmd.ExecuteScalar());
+
+                    object result = cmd.ExecuteScalar();
+                    if (Convert.IsDBNull(result))
+                    {
+                        comicTotal = 0;
+                    }
+                    else
+                    {
+                        comicTotal = Convert.ToInt32(result);
+                    }
                 }
             }
             catch (SqlException)
