@@ -42,6 +42,9 @@ export default new Vuex.Store({
   getters: {
     loggedIn(state) {
       return state.token !== '';
+    },
+    totalComicCount(state) {
+      return state.user.comicCount;
     }
   }
 })
