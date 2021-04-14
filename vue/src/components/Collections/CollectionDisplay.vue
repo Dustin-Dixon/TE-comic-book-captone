@@ -1,7 +1,11 @@
 <template>
   <v-container>
     <v-row v-if="addComic"
-      ><v-col align="center"
+      >
+      <v-col cols="10">
+        <v-divider />
+      </v-col>
+      <v-col cols="2"
         ><v-btn @click="addComic">Add Comic</v-btn></v-col
       ></v-row
     >

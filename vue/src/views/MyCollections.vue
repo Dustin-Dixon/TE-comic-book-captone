@@ -21,11 +21,11 @@
         />
       </v-col>
     </v-row>
-    <add-comic
-      :visible="addDialog"
-      @close="addDialog = false"
-      :saveComic="addComicToCollection"
-    />
+      <add-comic
+        :visible="addDialog"
+        @close="addDialog = false"
+        :saveComic="addComicToCollection"
+      />
   </v-container>
 </template>
 
@@ -75,7 +75,7 @@ export default {
         if (response.status === 201) {
           this.comics.push(response.data);
           this.selectedCollection.comicCount += 1;
-          this.$store.dispatch('ADD_COMIC');
+          this.$store.dispatch("ADD_COMIC");
         }
       });
     },
@@ -84,8 +84,9 @@ export default {
         this.selectedCollection.collectionID,
         comic.id
       ).then((response) => {
-        if (response.status === 200){
+        if (response.status === 200) {
           this.selectCollection(this.selectedCollection);
+          this.$store.dispatch("REMOVE_COMIC");
         }
       });
     },
