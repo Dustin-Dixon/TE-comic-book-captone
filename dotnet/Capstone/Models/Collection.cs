@@ -12,6 +12,7 @@ namespace Capstone.Models
         public string Username { get; set; }
         public string Name { get; set; }
         public bool Public { get; set; }
+        public int ComicCount { get; set; } = 0;
         
     }
 }

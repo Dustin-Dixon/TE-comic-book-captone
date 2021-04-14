@@ -1,11 +1,7 @@
-﻿using System;
-using System.Data.SqlClient;
+﻿using Capstone.Models;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Capstone.Models;
-using Capstone.Security;
-using Capstone.Security.Models;
+using System.Data.SqlClient;
 
 namespace Capstone.DAO
 {
@@ -26,7 +22,7 @@ namespace Capstone.DAO
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    conn.Open();               
+                    conn.Open();
 
                     SqlCommand cmd = new SqlCommand("SELECT c.collection_id, c.user_id, u.username, c.name, c.is_public " +
                                                     "FROM collections c " +
@@ -36,7 +32,9 @@ namespace Capstone.DAO
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
-                        publicCollections.Add(GetCollectionFromReader(reader));
+                        Collection collection = GetCollectionFromReader(reader);
+                        collection.ComicCount = GetCountOfComicsInCollection(collection.CollectionID);
+                        publicCollections.Add(collection);
                     }
 
                 }
@@ -67,7 +65,9 @@ namespace Capstone.DAO
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
-                        userCollections.Add(GetCollectionFromReader(reader));
+                        Collection collection = GetCollectionFromReader(reader);
+                        collection.ComicCount = GetCountOfComicsInCollection(collection.CollectionID);
+                        userCollections.Add(collection);
                     }
 
                 }
@@ -143,9 +143,10 @@ namespace Capstone.DAO
 
                     cmd.Parameters.AddWithValue("@id", id);
                     SqlDataReader reader = cmd.ExecuteReader();
-                    while (reader.Read())
+                    if (reader.Read())
                     {
-                      collection = GetCollectionFromReader(reader);
+                        collection = GetCollectionFromReader(reader);
+                        collection.CollectionID = GetCountOfComicsInCollection(id);
                     }
 
                 }
