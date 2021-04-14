@@ -37,11 +37,28 @@ export default new Vuex.Store({
       state.token = '';
       state.user = {};
       axios.defaults.headers.common = {};
-    }
+    },
   },
   getters: {
     loggedIn(state) {
       return state.token !== '';
+    },
+    totalComicCount(state) {
+      return state.user.comicCount;
+    }
+  },
+  actions: {
+    ADD_COMIC({ commit, state }) {
+      state.user.comicCount += 1;
+      commit('SET_USER', state.user);
+    },
+    REMOVE_COMIC({ commit, state }) {
+      state.user.comicCount -= 1;
+      commit('SET_USER', state.user);
+    },
+    REMOVE_COLLECTION({ commit, state }, collection) {
+      state.user.comicCount -= collection.comicCount;
+      commit('SET_USER', state.user);
     }
   }
 })

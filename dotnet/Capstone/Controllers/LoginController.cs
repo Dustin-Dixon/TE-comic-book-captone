@@ -12,12 +12,14 @@ namespace Capstone.Controllers
         private readonly ITokenGenerator tokenGenerator;
         private readonly IPasswordHasher passwordHasher;
         private readonly IUserDAO userDAO;
+        private readonly ICollectionDAO collectionDAO;
 
-        public LoginController(ITokenGenerator _tokenGenerator, IPasswordHasher _passwordHasher, IUserDAO _userDAO)
+        public LoginController(ITokenGenerator _tokenGenerator, IPasswordHasher _passwordHasher, IUserDAO _userDAO, ICollectionDAO _collectionDAO)
         {
             tokenGenerator = _tokenGenerator;
             passwordHasher = _passwordHasher;
             userDAO = _userDAO;
+            collectionDAO = _collectionDAO;
         }
 
         [HttpPost]
@@ -35,8 +37,10 @@ namespace Capstone.Controllers
                 // Create an authentication token
                 string token = tokenGenerator.GenerateToken(user.UserId, user.Username, user.Role);
 
+                int comicCount = collectionDAO.UserTotalComicCount(user.UserId);
+
                 // Create a ReturnUser object to return to the client
-                LoginResponse retUser = new LoginResponse() { User = new ReturnUser() { UserId = user.UserId, Username = user.Username, Role = user.Role }, Token = token };
+                LoginResponse retUser = new LoginResponse() { User = new ReturnUser() { UserId = user.UserId, Username = user.Username, Role = user.Role, ComicCount = comicCount }, Token = token };
 
                 // Switch to 200 OK
                 result = Ok(retUser);
