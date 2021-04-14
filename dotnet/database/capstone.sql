@@ -33,14 +33,25 @@ CREATE TABLE collections (
 	CONSTRAINT FK_collections_user_id FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
+CREATE TABLE volumes (
+	volume_id int NOT NULL,
+	name varchar(100) NOT NULL,
+	publisher varchar(100) NOT NULL,
+	api_detail_url varchar(100) NOT NULL,
+	site_detail_url varchar(100) NOT NULL,
+	CONSTRAINT PK_volumes PRIMARY KEY (volume_id)
+);
+
 CREATE TABLE comics (
 	comic_id int NOT NULL,
 	name varchar(100) NOT NULL,
 	issue_number varchar (5) NOT NULL,
 	cover_date date NULL,
 	site_detail_url varchar (255) NOT NULL,
-	api_detail_url varchar (255) NOT NULL
-	CONSTRAINT PK_comics PRIMARY KEY (comic_id)
+	api_detail_url varchar (255) NOT NULL,
+	volume_id int NULL,
+	CONSTRAINT PK_comics PRIMARY KEY (comic_id),
+	CONSTRAINT FK_comics_volumes_volume_id FOREIGN KEY (volume_id) REFERENCES volumes(volume_id)
 );
 
 CREATE TABLE comic_images (

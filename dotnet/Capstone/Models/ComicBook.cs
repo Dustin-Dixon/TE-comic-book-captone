@@ -16,5 +16,6 @@ namespace Capstone.Models
         public ComicImages Image { get; set; }
         public List<Character> Characters { get; set; }
         public List<Creator> Creators { get; set; }
+        public Volume Volume { get; set; }
     }
 }
