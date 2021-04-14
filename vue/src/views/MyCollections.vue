@@ -26,6 +26,7 @@
       @close="addDialog = false"
       :saveComic="addComicToCollection"
     />
+    <ConfirmDlg ref="confirm" />
   </v-container>
 </template>
 
@@ -37,9 +38,11 @@ import AddComic from "../components/Dialogs/AddComic.vue";
 
 import CollectionService from "../services/CollectionService";
 
+import ConfirmDlg from "../components/Dialogs/Confirm.vue"
+
 export default {
   name: "MyCollections",
-  components: { CollectionList, CollectionDisplay, AddComic },
+  components: { CollectionList, CollectionDisplay, AddComic, ConfirmDlg },
   data() {
     return {
       error: "",
@@ -79,13 +82,14 @@ export default {
         }
       });
     },
-    deleteComic(comic) {
+    async deleteComic(comic) {
       if (
-        confirm(
-          "Are you sure you want to remove this comic? This action cannot be undone."
-        )
-      ) {
-        CollectionService.deleteComicFromCollection(
+          await this.$refs.confirm.open(
+            "Confirm",
+            "Are you sure you want to remove this comic?"
+          )
+        ) {
+          CollectionService.deleteComicFromCollection(
           this.selectedCollection.collectionID,
           comic.id
         ).then((response) => {
@@ -94,7 +98,8 @@ export default {
             this.$store.dispatch("REMOVE_COMIC");
           }
         });
-      }
+        }
+        
     },
   },
   created() {

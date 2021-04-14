@@ -214,6 +214,43 @@ namespace Capstone.Controllers
 
         }
 
+        [HttpDelete("collection/{id}")]
+        public ActionResult<Collection> DeleteComicFromCollection(int id, ComicBook comicBook)
+        {
+            int userId = GetUserIdFromToken();
+            if (VerifyActiveUserOwnsCollection(id))
+            {
+                try
+                { 
+                    //get quantity of comic book in collection
+                    int totalComicQuantity = comicDAO.GetComicQuantityInCollection(id, comicBook.Id);
+                    if (totalComicQuantity == 1)
+                    {
+                        comicDAO.DeleteComicFromCollection(id, comicBook);
+                        return Ok(comicDAO.ComicsInCollection(id));
+    
+                    }
+                    else
+                    {
+                        comicDAO.UpdateQuantityOfComicInCollection(id, comicBook.Id, -1);
+                        return Ok(comicDAO.ComicsInCollection(id));
+                    }
+                }
+                catch(Exception e)
+                {
+                    return BadRequest(new { message = $"Could not delete comic from collection - {e.Message}" });
+                }
+
+            }
+            else
+            {
+                return Unauthorized(new { message = "Not owner of collection" });
+            }
+
+
+
+        }
+
         [HttpPut("collection/{id}")]
         public ActionResult<Collection> UpdateCollectionPrivacy(int id, Collection collection)
         {
