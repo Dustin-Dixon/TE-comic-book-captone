@@ -10,7 +10,7 @@ namespace Capstone.DAO
     {
         public bool AddCreatorCreditToTable(Creator creator);
         public bool LinkCreatorToComic(int creatorId, int comicId);
-
+        public List<Creator> GetComicCreators(int comicId);
         public void CheckDatabaseForCreators(List<Creator> creators);
     }
 }

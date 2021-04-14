@@ -93,6 +93,7 @@ namespace Capstone.Controllers
                 foreach (ComicBook comic in comicsInCollection)
                 {
                     comic.Characters = characterDAO.GetCharacterListForComicBook(comic.Id);
+                    comic.Creators = creatorDAO.GetComicCreators(comic.Id);
                 }
                 return Ok(comicsInCollection);
             }

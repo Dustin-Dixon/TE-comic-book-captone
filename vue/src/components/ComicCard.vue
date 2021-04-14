@@ -5,7 +5,7 @@
     <div class="text-center">{{ comic.name }} #{{comic.issueNumber}}</div>
     </v-card-text> -->
 
-    <comic-detail @delete="$emit('delete', $event)" :comic="comic" v-if="showInfo" />
+    <comic-detail @delete="$emit('delete', $event)" :comic="comic" v-if="showInfo" :showRemove="showRemove" />
   </v-card>
 </template>
 
@@ -13,7 +13,7 @@
 import ComicDetail from "./ComicDetail.vue";
 
 export default {
-  props: ["comic", "height", "showInfo"],
+  props: ["comic", "height", "showInfo", "showRemove"],
   components: { ComicDetail },
 };
 </script>

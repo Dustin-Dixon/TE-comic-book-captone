@@ -299,7 +299,8 @@ namespace Capstone.DAO
                     MediumUrl = Convert.ToString(reader["medium_url"]),
                     ThumbUrl = Convert.ToString(reader["thumb_url"])
                 },
-                Characters = new List<Character>()
+                Characters = new List<Character>(),
+                Creators = new List<Creator>()
             };
 
             return cb;
