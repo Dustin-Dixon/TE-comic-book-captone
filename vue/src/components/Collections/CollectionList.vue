@@ -11,12 +11,13 @@
             <v-list-item-content>
               <v-list-item-title v-text="collection.name" />
             </v-list-item-content>
-            <v-list-item-action>
+            <v-list-item-action class="flex-row">
               <v-btn icon :collection="collection">
-                <v-icon>mdi-trash-can</v-icon>
+                <v-hover v-slot="{ hover }">
+                  <v-icon v-if="hover">mdi-delete-empty</v-icon>
+                  <v-icon v-else>mdi-delete</v-icon>
+                </v-hover>
               </v-btn>
-            </v-list-item-action>
-            <v-list-item-action>
               <settings-menu :collection="collection" />
             </v-list-item-action>
           </v-list-item>
