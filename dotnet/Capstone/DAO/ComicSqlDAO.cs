@@ -40,6 +40,30 @@ namespace Capstone.DAO
             }
             return (isSuccessful == 1);
         }
+        public bool DeleteComicFromCollection(int collectionId,ComicBook comicBook)
+        {
+            int isSuccessful = 0;
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand("DELETE collection_id, comic_id, quantity " +
+                                                    "FROM collections_comics " +
+                                                    "WHERE collection_id = @collection_id && comic_id = @comid_id && quantity = @quantity; ", conn);
+                    cmd.Parameters.AddWithValue("@collection_id", collectionId);
+                    cmd.Parameters.AddWithValue("@comic_id", comicBook.Id);
+                    cmd.Parameters.AddWithValue("@quantity", 1);
+                    isSuccessful = cmd.ExecuteNonQuery();
+                }
+            }
+            catch (SqlException)
+            {
+                throw;
+            }
+            return (isSuccessful == 1);
+        }
 
         public int GetComicQuantityInCollection(int collectionId, int comicId)
         {
@@ -52,7 +76,7 @@ namespace Capstone.DAO
 
                     SqlCommand cmd = new SqlCommand("SELECT quantity " +
                                                     "FROM collections_comics " +
-                                                    "WHERE collection_id = @collection_id && comic_id = @comic_id;", conn);
+                                                    "WHERE collection_id = @collection_id AND comic_id = @comic_id;", conn);
                     cmd.Parameters.AddWithValue("@collection_id", collectionId);
                     cmd.Parameters.AddWithValue("@comic_id", comicId);
                     quantity = Convert.ToInt32(cmd.ExecuteScalar());
@@ -76,7 +100,7 @@ namespace Capstone.DAO
 
                     SqlCommand cmd = new SqlCommand("UPDATE collections_comics " +
                                                     "SET quantity = @quantity " +
-                                                    "WHERE collection_id = @collection_id && comic_id = @comic_id;", conn);
+                                                    "WHERE collection_id = @collection_id AND comic_id = @comic_id;", conn);
                     cmd.Parameters.AddWithValue("@collection_id", collectionId);
                     cmd.Parameters.AddWithValue("@comic_id", comicId);
                     cmd.Parameters.AddWithValue("@quantity", quantity);
