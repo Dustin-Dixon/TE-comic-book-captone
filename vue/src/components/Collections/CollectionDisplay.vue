@@ -1,17 +1,21 @@
 <template>
   <v-container>
-    <v-row v-if="addComic"
-      >
-      <v-col cols="10">
+    <v-row v-if="addComic" align="center">
+      <v-col cols="9">
         <v-divider />
       </v-col>
-      <v-col cols="2"
-        ><v-btn @click="addComic">Add Comic</v-btn></v-col
-      ></v-row
-    >
+      <v-col cols="2">
+        <v-btn @click="addComic">Add Comic</v-btn>
+      </v-col>
+    </v-row>
     <v-row>
       <v-col cols="3" v-for="comic in comics" :key="comic.id">
-        <comic-card @delete="$emit('delete', $event)" :comic="comic" :height="cardHeight" :showInfo="showInfo"/>
+        <comic-card
+          @delete="$emit('delete', $event)"
+          :comic="comic"
+          :height="cardHeight"
+          :showInfo="showInfo"
+        />
       </v-col>
     </v-row>
   </v-container>
@@ -35,7 +39,7 @@ export default {
     showInfo: {
       type: Boolean,
       default: true,
-    }
+    },
   },
   computed: {
     cardHeight() {
