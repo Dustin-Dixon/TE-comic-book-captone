@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-list nav dense>
-      <v-list-item-group v-model="selectedCollection" color="primary">
+      <v-list-item-group v-model="selectedCollection" color="primary" mandatory>
         <template v-for="collection in collections">
           <v-list-item
             :key="collection.collectionID"
