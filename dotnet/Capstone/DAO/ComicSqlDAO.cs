@@ -66,7 +66,7 @@ namespace Capstone.DAO
 
         public int GetComicQuantityInCollection(int collectionId, int comicId)
         {
-            int quantity = 0;
+            int quantity = -1;
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -93,6 +93,7 @@ namespace Capstone.DAO
             {
                 throw;
             }
+
             return quantity;
         }
 

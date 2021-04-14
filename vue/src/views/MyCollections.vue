@@ -33,12 +33,9 @@
 <script>
 import CollectionList from "../components/Collections/CollectionList.vue";
 import CollectionDisplay from "../components/Collections/CollectionDisplay.vue";
-
 import AddComic from "../components/Dialogs/AddComic.vue";
-
 import CollectionService from "../services/CollectionService";
-
-import ConfirmDlg from "../components/Dialogs/Confirm.vue"
+import ConfirmDlg from "../components/Dialogs/Confirm.vue";
 
 export default {
   name: "MyCollections",

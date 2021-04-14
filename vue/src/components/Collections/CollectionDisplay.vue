@@ -15,6 +15,7 @@
           :comic="comic"
           :height="cardHeight"
           :showInfo="showInfo"
+          :showRemove="showRemove"
         />
       </v-col>
     </v-row>
@@ -37,6 +38,10 @@ export default {
       type: Function,
     },
     showInfo: {
+      type: Boolean,
+      default: true,
+    },
+    showRemove: {
       type: Boolean,
       default: true,
     },

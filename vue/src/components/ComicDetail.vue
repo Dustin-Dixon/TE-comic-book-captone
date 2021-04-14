@@ -12,14 +12,14 @@
         <div>Issue Number: {{ comic.issueNumber }}</div>
         <div>Cover Date: {{ comic.coverDate }}</div>
       </v-card-text>
-      <v-btn @click="$emit('delete', comic)">Remove Comic</v-btn>
+      <v-btn v-if="showRemove" @click="$emit('delete', comic)">Remove Comic</v-btn>
     </v-card>
   </v-menu>
 </template>
 
 <script>
 export default {
-  props: ["comic"],
+  props: ["comic", "showRemove" ],
   data() {
     return {
       showDetail: false,

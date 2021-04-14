@@ -265,6 +265,52 @@ namespace Capstone.DAO
             return comicTotal;
         }
 
+        public bool DeleteCollection(int collectionId)
+        {
+            int isSuccessful = 0;
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand("DELETE " +
+                                                    "FROM collections " +
+                                                    "WHERE collection_id = @collection_id", conn);
+                    cmd.Parameters.AddWithValue("@collection_id", collectionId);
+                    isSuccessful = Convert.ToInt32(cmd.ExecuteNonQuery());
+                }
+            }
+            catch (SqlException)
+            {
+                throw;
+            }
+            return (isSuccessful == 1);
+        }
+
+        public bool DeleteCollectionFromComicLinker(int collectionId)
+        {
+            int isSuccessful = 0;
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand("DELETE " +
+                                                    "FROM collections_comics " +
+                                                    "WHERE collection_id = @collection_id", conn);
+                    cmd.Parameters.AddWithValue("@collection_id", collectionId);
+                    isSuccessful = Convert.ToInt32(cmd.ExecuteNonQuery());
+                }
+            }
+            catch (SqlException)
+            {
+                throw;
+            }
+            return (isSuccessful > 0);
+        }
+
         private Collection GetCollectionFromReader(SqlDataReader reader)
         {
             Collection c = new Collection()
