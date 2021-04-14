@@ -21,11 +21,11 @@
         />
       </v-col>
     </v-row>
-      <add-comic
-        :visible="addDialog"
-        @close="addDialog = false"
-        :saveComic="addComicToCollection"
-      />
+    <add-comic
+      :visible="addDialog"
+      @close="addDialog = false"
+      :saveComic="addComicToCollection"
+    />
   </v-container>
 </template>
 
@@ -80,15 +80,21 @@ export default {
       });
     },
     deleteComic(comic) {
-      CollectionService.deleteComicFromCollection(
-        this.selectedCollection.collectionID,
-        comic.id
-      ).then((response) => {
-        if (response.status === 200) {
-          this.selectCollection(this.selectedCollection);
-          this.$store.dispatch("REMOVE_COMIC");
-        }
-      });
+      if (
+        confirm(
+          "Are you sure you want to remove this comic? This action cannot be undone."
+        )
+      ) {
+        CollectionService.deleteComicFromCollection(
+          this.selectedCollection.collectionID,
+          comic.id
+        ).then((response) => {
+          if (response.status === 200) {
+            this.selectCollection(this.selectedCollection);
+            this.$store.dispatch("REMOVE_COMIC");
+          }
+        });
+      }
     },
   },
   created() {
