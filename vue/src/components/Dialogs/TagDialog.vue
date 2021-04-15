@@ -36,11 +36,11 @@ export default {
   },
   methods: {
     addTagToComic() {
-      ComicService.addTagToComic(this.comic.comicID, this.newTag).then(
+      ComicService.addTagToComic(this.comic.id, this.newTag).then(
         (response) => {
           console.log(response);
           if (response.status === 201) {
-
+              console.log(response.data);
           }
         }
       );
