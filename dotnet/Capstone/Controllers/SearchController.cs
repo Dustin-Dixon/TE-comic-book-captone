@@ -13,11 +13,19 @@ namespace Capstone.Controllers
     {
         private readonly IComicVineService comicVine;
         private readonly IComicDAO comicDAO;
+        private readonly ICharacterDAO characterDAO;
+        private readonly ICreatorDAO creatorDAO;
+        private readonly IVolumeDAO volumeDAO;
+        private readonly ITagDAO tagDAO;
 
-        public SearchController(IComicVineService comicVineService, IComicDAO comicDAO)
+        public SearchController(IComicVineService comicVineService, IComicDAO comicDAO, ICharacterDAO characterDAO, ICreatorDAO creatorDAO, IVolumeDAO volumeDAO, ITagDAO tagDAO)
         {
-            this.comicVine = comicVineService;
+            comicVine = comicVineService;
             this.comicDAO = comicDAO;
+            this.characterDAO = characterDAO;
+            this.creatorDAO = creatorDAO;
+            this.volumeDAO = volumeDAO;
+            this.tagDAO = tagDAO;
         }
 
         [HttpGet("issues")]
@@ -41,6 +49,13 @@ namespace Capstone.Controllers
         {
             List<ComicBook> searchResponseList = new List<ComicBook>();
             searchResponseList = comicDAO.LocalComicSearch(searchTerm);
+            foreach (ComicBook comic in searchResponseList)
+            {
+                comic.Characters = characterDAO.GetCharacterListForComicBook(comic.Id);
+                comic.Creators = creatorDAO.GetComicCreators(comic.Id);
+                comic.Volume = volumeDAO.GetComicVolume(comic.Id);
+                comic.Tags = tagDAO.GetTagListForComicBook(comic.Id);
+            }
             return Ok(searchResponseList);
         }
     }
