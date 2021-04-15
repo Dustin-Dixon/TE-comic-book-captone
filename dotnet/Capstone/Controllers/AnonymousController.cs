@@ -18,14 +18,16 @@ namespace Capstone.Controllers
         private readonly ICharacterDAO characterDAO;
         private readonly ICreatorDAO creatorDAO;
         private readonly IVolumeDAO volumeDAO;
+        private readonly ITagDAO tagDAO;
 
-        public AnonymousController(ICollectionDAO collectionDAO, IComicDAO comicDAO, ICharacterDAO characterDAO, ICreatorDAO creatorDAO, IVolumeDAO volumeDAO)
+        public AnonymousController(ICollectionDAO collectionDAO, IComicDAO comicDAO, ICharacterDAO characterDAO, ICreatorDAO creatorDAO, IVolumeDAO volumeDAO, ITagDAO tagDAO)
         {
             this.collectionDAO = collectionDAO;
             this.comicDAO = comicDAO;
             this.characterDAO = characterDAO;
             this.creatorDAO = creatorDAO;
             this.volumeDAO = volumeDAO;
+            this.tagDAO = tagDAO;
         }
 
         [HttpGet("collection")]
@@ -78,6 +80,7 @@ namespace Capstone.Controllers
                     comic.Characters = characterDAO.GetCharacterListForComicBook(comic.Id);
                     comic.Creators = creatorDAO.GetComicCreators(comic.Id);
                     comic.Volume = volumeDAO.GetComicVolume(comic.Id);
+                    comic.Tags = tagDAO.GetTagListForComicBook(comic.Id);
                 }
                 return Ok(publicViewComics);
             }
