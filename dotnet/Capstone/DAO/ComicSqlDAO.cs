@@ -135,14 +135,15 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("INSERT INTO comics (comic_id, name, issue_number, cover_date, site_detail_url, api_detail_url) " +
-                                                    "VALUES (@comic_id, @name, @issue_number, @cover_date, @site_detail_url, @api_detail_url)", conn);
+                    SqlCommand cmd = new SqlCommand("INSERT INTO comics (comic_id, name, issue_number, cover_date, site_detail_url, api_detail_url, volume_id) " +
+                                                    "VALUES (@comic_id, @name, @issue_number, @cover_date, @site_detail_url, @api_detail_url, @volumeId)", conn);
                     cmd.Parameters.AddWithValue("@comic_id", comicBook.Id);
                     cmd.Parameters.AddWithValue("@name", comicBook.Name);
                     cmd.Parameters.AddWithValue("@issue_number", comicBook.IssueNumber);
                     cmd.Parameters.AddWithValue("@cover_date", comicBook.CoverDate);
                     cmd.Parameters.AddWithValue("@site_detail_url", comicBook.SiteDetailUrl);
                     cmd.Parameters.AddWithValue("@api_detail_url", comicBook.ApiDetailUrl);
+                    cmd.Parameters.AddWithValue("@volumeId", comicBook.Volume.Id);
                     isSuccessful = cmd.ExecuteNonQuery();
                 }
             }

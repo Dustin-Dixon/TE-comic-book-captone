@@ -20,8 +20,9 @@ namespace Capstone.Controllers
         private readonly ICharacterDAO characterDAO;
         private readonly ICreatorDAO creatorDAO;
         private readonly ITagDAO tagDAO;
+        private readonly IVolumeDAO volumeDAO;
 
-        public UserController(ICollectionDAO collectionDAO, IComicDAO comicDAO, IComicVineService comicVine, IUserDAO userDAO, ICharacterDAO characterDAO, ICreatorDAO creatorDAO, ITagDAO tagDAO)
+        public UserController(ICollectionDAO collectionDAO, IComicDAO comicDAO, IComicVineService comicVine, IUserDAO userDAO, ICharacterDAO characterDAO, ICreatorDAO creatorDAO, ITagDAO tagDAO, IVolumeDAO volumeDAO)
         {
             this.collectionDAO = collectionDAO;
             this.comicDAO = comicDAO;
@@ -30,6 +31,7 @@ namespace Capstone.Controllers
             this.characterDAO = characterDAO;
             this.creatorDAO = creatorDAO;
             this.tagDAO = tagDAO;
+            this.volumeDAO = volumeDAO;
         }
         private int GetUserIdFromToken()
         {
@@ -97,6 +99,7 @@ namespace Capstone.Controllers
                     comic.Characters = characterDAO.GetCharacterListForComicBook(comic.Id);
                     comic.Creators = creatorDAO.GetComicCreators(comic.Id);
                     comic.Tags = tagDAO.GetTagListForComicBook(comic.Id);
+                    comic.Volume = volumeDAO.GetComicVolume(comic.Id);
                 }
                 return Ok(comicsInCollection);
             }
@@ -123,18 +126,34 @@ namespace Capstone.Controllers
                         {
                             ComicVineFilters filters = new ComicVineFilters();
                             filters.AddFilter("id", comicBook.Id.ToString());
-                            ComicVineIssueResponse response = await comicVine.GetIssues(filters);
+                            CVIssueResponse response = await comicVine.GetIssues(filters);
                             if (response.StatusCode != 1)
                             {
-                                throw new ComicVineException($"Failed ComicVine request: {response.Error}");
+                                throw new ComicVineException($"Failed ComicVine Issue request: {response.Error}");
                             }
                             ComicBook issue = response.Results[0];
-                            CVSingleIssueResponse issueCharAndCreators = await comicVine.GetIssueDetails(issue.ApiDetailUrl);
-                            List<Character> characters = issueCharAndCreators.Results.CharacterCredits;
+
+                            CVSingleIssueResponse issueDetails = await comicVine.GetIssueDetails(issue.ApiDetailUrl);
+                            List<Character> characters = issueDetails.Results.CharacterCredits;
                             characterDAO.CheckDatabaseForCharacters(characters);
-                            List<Creator> creators = issueCharAndCreators.Results.PersonCredits;
+                            List<Creator> creators = issueDetails.Results.PersonCredits;
                             creatorDAO.CheckDatabaseForCreators(creators);
-                            
+
+                            Volume volume = volumeDAO.GetById(issueDetails.Results.Volume.Id);
+
+                            // Volume not in database, need to add details.
+                            if (volume == null)
+                            {
+                                CVVolumeResponse volumeResponse = await comicVine.GetVolumeDetails(issueDetails.Results.Volume.ApiDetailUrl);
+                                if (volumeResponse.StatusCode != 1)
+                                {
+                                    throw new ComicVineException($"Failed ComicVine Volume Request: {volumeResponse.Error}");
+                                }
+
+                                volumeDAO.AddVolume(volumeResponse.Results);
+                                volume = volumeResponse.Results;
+                            }
+                            comicBook.Volume = volume;
 
                             using(TransactionScope scope = new TransactionScope())
                             {

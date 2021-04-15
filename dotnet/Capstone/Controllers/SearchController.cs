@@ -21,7 +21,7 @@ namespace Capstone.Controllers
         }
 
         [HttpGet("issues")]
-        public async Task<ActionResult<ComicVineIssueResponse>> SearchIssues(string name,string description)
+        public async Task<ActionResult<CVIssueResponse>> SearchIssues(string name,string description)
         {
             ComicVineFilters filter = new ComicVineFilters();
             if (name != null)
@@ -32,7 +32,7 @@ namespace Capstone.Controllers
             {
                 filter.AddFilter("description", description);
             }
-            ComicVineIssueResponse response = await comicVine.GetIssues(filter);
+            CVIssueResponse response = await comicVine.GetIssues(filter);
             return Ok(response);
         }
 

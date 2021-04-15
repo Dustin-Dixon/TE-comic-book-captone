@@ -15,14 +15,14 @@ namespace Capstone.Services
             client.AddDefaultQueryParameter("format", "json");
         }
 
-        public async Task<ComicVineIssueResponse> GetIssues(ComicVineFilters filter)
+        public async Task<CVIssueResponse> GetIssues(ComicVineFilters filter)
         {
             IRestRequest request = new RestRequest("/issues");
             if (filter.HasFilters())
             {
                 request.AddQueryParameter("filter", filter.GetFiltersString());
             }
-            IRestResponse<ComicVineIssueResponse> response = await client.ExecuteGetAsync<ComicVineIssueResponse>(request);
+            IRestResponse<CVIssueResponse> response = await client.ExecuteGetAsync<CVIssueResponse>(request);
             HandleError(response);
             return response.Data;
         }
@@ -43,6 +43,14 @@ namespace Capstone.Services
         {
             IRestRequest request = new RestRequest(SliceComicApiUrl(comic_api_url));
             IRestResponse<CVSingleIssueResponse> response = await client.ExecuteGetAsync<CVSingleIssueResponse>(request);
+            HandleError(response);
+            return response.Data;
+        }
+
+        public async Task<CVVolumeResponse> GetVolumeDetails(string volume_api_url)
+        {
+            IRestRequest request = new RestRequest(SliceComicApiUrl(volume_api_url));
+            IRestResponse<CVVolumeResponse> response = await client.ExecuteGetAsync<CVVolumeResponse>(request);
             HandleError(response);
             return response.Data;
         }

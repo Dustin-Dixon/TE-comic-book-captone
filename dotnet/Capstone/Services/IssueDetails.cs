@@ -6,9 +6,10 @@ using Capstone.Models;
 
 namespace Capstone.Services
 {
-    public class ApiResult
+    public class IssueDetails
     {
         public List<Character> CharacterCredits { get; set; }
         public List<Creator> PersonCredits { get; set; }
+        public Volume Volume { get; set; }
     }
 }

@@ -70,6 +70,7 @@ namespace Capstone
             services.AddTransient<ICharacterDAO>(m => new CharacterSqlDAO(connectionString));
             services.AddTransient<ICreatorDAO>(m => new CreatorSqlDAO(connectionString));
             services.AddTransient<ITagDAO>(m => new TagSqlDAO(connectionString));
+            services.AddTransient<IVolumeDAO>(m => new VolumeSqlDAO(connectionString));
         }
 
 

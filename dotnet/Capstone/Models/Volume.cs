@@ -9,8 +9,9 @@ namespace Capstone.Models
     {
         public int Id { get; set; }
         public string Name { get; set; } = "";
-        public string Publisher { get; set; } = "";
+        public Publisher Publisher { get; set; }
         public string ApiDetailUrl { get; set; }
         public string SiteDetailUrl { get; set; }
+        public VolumeImages Image { get; set; }
     }
 }
