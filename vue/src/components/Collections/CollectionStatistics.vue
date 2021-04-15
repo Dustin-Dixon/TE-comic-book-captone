@@ -9,6 +9,7 @@
 
 <script>
 import CollectionService from "../../services/CollectionService.js";
+import { mapState } from "vuex";
 
 export default {
   props: ["collection"],
@@ -21,11 +22,15 @@ export default {
     hasCollection() {
       return this.collection.collectionID !== undefined;
     },
+    ...mapState(["user"]),
+    comicCount() {
+      return this.user.comicCount;
+    },
   },
-  watch: {
-    collection: function (val) {
-      if (val.collectionID !== undefined) {
-        CollectionService.getCollectionStats(val.collectionID).then(
+  methods: {
+    loadStats() {
+      if (this.collection.collectionID !== undefined) {
+        CollectionService.getCollectionStats(this.collection.collectionID).then(
           (response) => {
             if (response.status === 200) {
               this.stats = response.data;
@@ -34,6 +39,14 @@ export default {
         );
       }
     },
+  },
+  watch: {
+    collection: function () {
+      this.loadStats();
+    },
+    comicCount: function() {
+      this.loadStats();
+    }
   },
 };
 </script>
