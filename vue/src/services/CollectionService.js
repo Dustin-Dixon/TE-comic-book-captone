@@ -35,5 +35,13 @@ export default {
 
     deleteComicFromCollection(collectionID,comicID) {
         return axios.delete(`user/collection/${collectionID}/comic/${comicID}`)
-    }
+    },
+
+    getPublicCollectionStats(collectionId) {
+        return axios.get(`anonymous/collection/${collectionId}/stats`);
+    },
+
+    getUserCollectionStats(collectionId) {
+        return axios.get(`user/collection/${collectionId}/stats`);
+    },
 }
