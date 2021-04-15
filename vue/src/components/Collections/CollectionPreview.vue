@@ -9,7 +9,7 @@
       </v-row>
       <v-divider class="my-5" />
       <v-row>
-        <collection-display class="mx-10" :comics="firstFourComics" :showInfo="false" />
+        <collection-display class="mx-10" :comics="firstThreeComics" :showInfo="false" />
       </v-row>
     </v-container>
   </v-sheet>
@@ -28,8 +28,8 @@ export default {
     };
   },
   computed: {
-    firstFourComics() {
-      return this.comics.slice(0, 4);
+    firstThreeComics() {
+      return this.comics.slice(0, 3);
     },
   },
   created() {
