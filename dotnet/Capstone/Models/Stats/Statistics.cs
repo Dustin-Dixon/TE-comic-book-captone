@@ -8,6 +8,7 @@ namespace Capstone.Models
 {
     public class Statistics
     {
+        public int ComicCount { get; set; }
         public List<CharacterCount> Characters { get; set; }
     }
 }

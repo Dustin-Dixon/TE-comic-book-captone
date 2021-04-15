@@ -197,5 +197,41 @@ namespace Capstone.DAO
 
             return charStats;
         }
+        public List<CharacterCount> GetTotalCollectionCharacterCount()
+        {
+            List<CharacterCount> charStats = new List<CharacterCount>();
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    string query = "SELECT cha.character_id, cha.name, COUNT(cha.character_id) AS count from comics com " +
+                                   "JOIN collections_comics col on com.comic_id = col.comic_id " +
+                                   "JOIN comic_characters com_cha on com.comic_id = com_cha.comic_id " +
+                                   "JOIN characters cha ON com_cha.character_id = cha.character_id " +
+                                   "GROUP BY cha.character_id, cha.name;";
+
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        charStats.Add(new CharacterCount()
+                        {
+                            Character = GetCharacterFromReader(reader),
+                            Count = Convert.ToInt32(reader["count"])
+                        });
+                    }
+                }
+            }
+            catch (SqlException)
+            {
+                throw;
+            }
+
+            return charStats;
+        }
     }
 }

@@ -116,6 +116,7 @@ namespace Capstone.Controllers
             {
                 Statistics stats = new Statistics()
                 {
+                    ComicCount = collectionDAO.GetCountOfComicsInCollection(id),
                     Characters = characterDAO.GetCollectionCharacterCount(id)
                 };
                 return Ok(stats);
