@@ -13,16 +13,6 @@
       <v-card-actions>
         <v-container>
           <v-row>
-            <v-col cols="3" v-for="comic in searchResults" :key="comic.comicID">
-              <comic-card
-                :comic="comic"
-                height="100px"
-                @click="saveClickedComic(comic)"
-                :showInfo="true"
-              />
-            </v-col>
-          </v-row>
-          <v-row>
             <v-col align="center">
               Can't find your comic?
               <v-btn
@@ -31,6 +21,16 @@
                 :disabled="disableOnlineSearch"
                 >Search Online</v-btn
               >
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="3" v-for="comic in searchResults" :key="comic.comicID">
+              <comic-card
+                :comic="comic"
+                height="100px"
+                @click="saveClickedComic(comic)"
+                :showInfo="true"
+              />
             </v-col>
           </v-row>
         </v-container>
