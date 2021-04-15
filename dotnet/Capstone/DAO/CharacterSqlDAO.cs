@@ -1,9 +1,8 @@
-﻿using System;
+﻿using Capstone.Models;
+using Capstone.Models.Stats;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Data.SqlClient;
-using Capstone.Models;
 
 namespace Capstone.DAO
 {
@@ -11,7 +10,7 @@ namespace Capstone.DAO
     {
         private readonly string connectionString;
 
-        public CharacterSqlDAO (string dbConnectionString)
+        public CharacterSqlDAO(string dbConnectionString)
         {
             connectionString = dbConnectionString;
         }
@@ -98,7 +97,7 @@ namespace Capstone.DAO
             {
                 int isFound = 0;
                 try
-            {
+                {
                     using (SqlConnection conn = new SqlConnection(connectionString))
                     {
                         conn.Open();
@@ -158,6 +157,45 @@ namespace Capstone.DAO
                 Name = Convert.ToString(reader["name"])
             };
             return c;
+        }
+
+        public List<CharacterCount> GetCollectionCharacterCount(int collectionId)
+        {
+            List<CharacterCount> charStats = new List<CharacterCount>();
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    string query = "SELECT cha.character_id, cha.name, COUNT(cha.character_id) AS count from comics com " +
+                                   "JOIN collections_comics col on com.comic_id = col.comic_id " +
+                                   "JOIN comic_characters com_cha on com.comic_id = com_cha.comic_id " +
+                                   "JOIN characters cha ON com_cha.character_id = cha.character_id " +
+                                   "WHERE col.collection_id = @collectionId " +
+                                   "GROUP BY cha.character_id, cha.name;";
+
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@collectionId", collectionId);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        charStats.Add(new CharacterCount()
+                        {
+                            Character = GetCharacterFromReader(reader),
+                            Count = Convert.ToInt32(reader["count"])
+                        });
+                    }
+                }
+            }
+            catch (SqlException)
+            {
+                throw;
+            }
+
+            return charStats;
         }
     }
 }

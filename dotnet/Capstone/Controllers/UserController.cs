@@ -109,6 +109,23 @@ namespace Capstone.Controllers
             }
         }
 
+        [HttpGet("collection/{id}/stats")]
+        public ActionResult<Statistics> GetCollectionStatistics(int id)
+        {
+            if (VerifyActiveUserOwnsCollection(id))
+            {
+                Statistics stats = new Statistics()
+                {
+                    Characters = characterDAO.GetCollectionCharacterCount(id)
+                };
+                return Ok(stats);
+            }
+            else
+            {
+                return Unauthorized(new { message = "Not owner of collection" });
+            }
+        }
+
         [HttpPost("collection/{id}")]
         public async Task<ActionResult<ComicBook>> AddComicToCollection(int id, ComicBook comicBook)
         {
