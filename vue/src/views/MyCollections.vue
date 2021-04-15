@@ -15,6 +15,7 @@
       </v-col>
       <v-col>
         <collection-display
+          v-if="collections.length > 0"
           @delete="deleteComic"
           :addComic="() => (addDialog = !addDialog)"
           :comics="comics"
