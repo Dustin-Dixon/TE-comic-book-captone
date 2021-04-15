@@ -48,26 +48,6 @@ namespace Capstone.Controllers
             });
         }
 
-        [HttpGet("collection/{id}/stats")]
-        public ActionResult<Statistics> GetPublicCollectionStatistics(int id)
-        {
-            Collection collection = collectionDAO.GetSingleCollection(id);
-            if (collection.Public)
-            {
-                Statistics stats = new Statistics()
-                {
-                    ComicCount = collectionDAO.GetCountOfComicsInCollection(id),
-                    Characters = characterDAO.GetCollectionCharacterCount(id),
-                    Creators = creatorDAO.GetCollectionCreatorCount(id),
-                };
-                return Ok(stats);
-            }
-            else
-            {
-                return Unauthorized(new { message = "The collection is private" });
-            }
-        }
-
         [HttpGet("collection/{id}/comic")]
         public ActionResult<List<ComicBook>> ComicsInPublicCollection(int id)
         {
