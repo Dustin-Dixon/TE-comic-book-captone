@@ -16,7 +16,7 @@ export default {
     };
   },
   created() {
-    CollectionService.getPublicCollectionStats(this.collection.id).then(
+    CollectionService.getCollectionStats(this.collection.collectionID).then(
       (response) => {
         if (response.status === 200) {
           this.stats = response.data;

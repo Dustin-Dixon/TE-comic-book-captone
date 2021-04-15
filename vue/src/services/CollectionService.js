@@ -37,11 +37,7 @@ export default {
         return axios.delete(`user/collection/${collectionID}/comic/${comicID}`)
     },
 
-    getPublicCollectionStats(collectionId) {
-        return axios.get(`anonymous/collection/${collectionId}/stats`);
-    },
-
-    getUserCollectionStats(collectionId) {
+    getCollectionStats(collectionId) {
         return axios.get(`/collection/${collectionId}/stats`);
     },
 }

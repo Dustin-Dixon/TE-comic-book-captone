@@ -24,7 +24,7 @@
         </v-row>
       </v-col>
       <v-col cols="3">
-        <collection-statistics :collection="selectedCollection" />
+        <collection-statistics :collection="selectedCollection" :key="selectedCollection.collectionID"/>
       </v-col>
     </v-row>
   </v-container>
