@@ -29,7 +29,7 @@ export default {
         return axios.get(`anonymous/collection/${collectionID}/comic`);
     },
 
-    getPubliCollectionFromID(collectionID) {
+    getPublicCollectionFromID(collectionID) {
         return axios.get(`anonymous/collection/${collectionID}`);
     },
 

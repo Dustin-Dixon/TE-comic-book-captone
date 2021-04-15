@@ -146,7 +146,7 @@ namespace Capstone.DAO
                     if (reader.Read())
                     {
                         collection = GetCollectionFromReader(reader);
-                        collection.CollectionID = GetCountOfComicsInCollection(id);
+                        collection.ComicCount = GetCountOfComicsInCollection(id);
                     }
 
                 }

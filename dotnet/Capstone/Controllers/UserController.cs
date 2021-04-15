@@ -1,6 +1,7 @@
 ﻿using Capstone.DAO;
 using Capstone.Models;
 using Capstone.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -110,6 +111,7 @@ namespace Capstone.Controllers
         }
 
         [HttpGet("/collection/{id}/stats")]
+        [AllowAnonymous]
         public ActionResult<Statistics> GetCollectionStatistics(int id)
         {
             Collection collection = collectionDAO.GetSingleCollection(id);

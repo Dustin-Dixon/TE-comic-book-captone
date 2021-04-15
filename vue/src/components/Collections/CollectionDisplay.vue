@@ -9,22 +9,15 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="9">
-        <v-row>
-          <v-col cols="4" v-for="comic in comics" :key="comic.id">
-            <comic-card
-              @delete="$emit('delete', $event)"
-              @add-tag="comic.tags.push($event)"
-              :comic="comic"
-              :height="cardHeight"
-              :showInfo="showInfo"
-              :showRemove="showRemove"
-            />
-          </v-col>
-        </v-row>
-      </v-col>
-      <v-col cols="3">
-        <collection-statistics :collection="selectedCollection" :key="selectedCollection.collectionID"/>
+      <v-col cols="4" v-for="comic in comics" :key="comic.id">
+        <comic-card
+          @delete="$emit('delete', $event)"
+          @add-tag="comic.tags.push($event)"
+          :comic="comic"
+          :height="cardHeight"
+          :showInfo="showInfo"
+          :showRemove="showRemove"
+        />
       </v-col>
     </v-row>
   </v-container>
@@ -32,11 +25,10 @@
 
 <script>
 import ComicCard from "../ComicCard.vue";
-import CollectionStatistics from "../Collections/CollectionStatistics.vue";
+
 export default {
   components: {
     ComicCard,
-    CollectionStatistics,
   },
   props: {
     comics: {
@@ -53,10 +45,6 @@ export default {
     showRemove: {
       type: Boolean,
       default: true,
-    },
-    selectedCollection: {
-      type: Object,
-      default: () => {},
     },
   },
   computed: {

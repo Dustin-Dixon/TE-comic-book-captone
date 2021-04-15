@@ -13,7 +13,7 @@
           :changeSelected="selectCollection"
         />
       </v-col>
-      <v-col>
+      <v-col cols="6">
         <collection-display
           v-if="collections.length > 0"
           @delete="deleteComic"
@@ -21,6 +21,9 @@
           :comics="comics"
           :selectedCollection="selectedCollection"
         />
+      </v-col>
+      <v-col>
+        <collection-statistics :collection="selectedCollection" />
       </v-col>
     </v-row>
     <add-comic
@@ -35,13 +38,20 @@
 <script>
 import CollectionList from "../components/Collections/CollectionList.vue";
 import CollectionDisplay from "../components/Collections/CollectionDisplay.vue";
+import CollectionStatistics from "../components/Collections/CollectionStatistics.vue";
 import AddComic from "../components/Dialogs/AddComic.vue";
 import CollectionService from "../services/CollectionService";
 import ConfirmDlg from "../components/Dialogs/Confirm.vue";
 
 export default {
   name: "MyCollections",
-  components: { CollectionList, CollectionDisplay, AddComic, ConfirmDlg },
+  components: {
+    CollectionList,
+    CollectionDisplay,
+    AddComic,
+    ConfirmDlg,
+    CollectionStatistics,
+  },
   data() {
     return {
       error: "",
@@ -86,12 +96,12 @@ export default {
     },
     async deleteComic(comic) {
       if (
-          await this.$refs.confirm.open(
-            "Confirm",
-            "Are you sure you want to remove this comic?"
-          )
-        ) {
-          CollectionService.deleteComicFromCollection(
+        await this.$refs.confirm.open(
+          "Confirm",
+          "Are you sure you want to remove this comic?"
+        )
+      ) {
+        CollectionService.deleteComicFromCollection(
           this.selectedCollection.collectionID,
           comic.id
         ).then((response) => {
@@ -100,8 +110,7 @@ export default {
             this.$store.dispatch("REMOVE_COMIC");
           }
         });
-        }
-        
+      }
     },
   },
   created() {
