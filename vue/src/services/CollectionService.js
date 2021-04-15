@@ -42,6 +42,6 @@ export default {
     },
 
     getUserCollectionStats(collectionId) {
-        return axios.get(`user/collection/${collectionId}/stats`);
+        return axios.get(`/collection/${collectionId}/stats`);
     },
 }

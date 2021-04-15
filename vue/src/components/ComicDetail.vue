@@ -14,6 +14,8 @@
       <v-card-title align="center">{{ comic.name }}</v-card-title>
       <v-card-text>
         <div>Issue Number: {{ comic.issueNumber }}</div>
+        <div>Volume: {{ comic.volume.name }}</div>
+        <div v-if="comic.volume.publisher !== null">Publisher: {{ comic.volume.publisher.name }} </div>
         <div>Cover Date: {{ comic.coverDate }}</div>
         <div v-if="Array.isArray(comic.creators) && comic.creators.length > 0">Creators: {{ creatorList }}</div>
         <div v-if="Array.isArray(comic.characters) && comic.characters.length > 0">Characters: {{ characterList }}</div>

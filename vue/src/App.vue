@@ -12,7 +12,7 @@
         ><v-img src="../public/power_comics_icon.png" height="40px" contain
       /></v-btn>
       <v-btn :to="{ name: 'site-statistics' }" class="text-nav" text
-        >Site Comic Statistics</v-btn
+        >Statistics</v-btn
       >
       <v-btn :to="{ name: 'about-us' }" class="text-nav" text>About Us</v-btn>
       <v-spacer />

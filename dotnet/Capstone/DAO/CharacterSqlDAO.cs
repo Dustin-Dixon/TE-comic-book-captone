@@ -174,7 +174,8 @@ namespace Capstone.DAO
                                    "JOIN comic_characters com_cha on com.comic_id = com_cha.comic_id " +
                                    "JOIN characters cha ON com_cha.character_id = cha.character_id " +
                                    "WHERE col.collection_id = @collectionId " +
-                                   "GROUP BY cha.character_id, cha.name;";
+                                   "GROUP BY cha.character_id, cha.name " +
+                                   "ORDER BY count DESC;";
 
                     SqlCommand cmd = new SqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@collectionId", collectionId);
@@ -211,7 +212,8 @@ namespace Capstone.DAO
                                    "JOIN collections_comics col on com.comic_id = col.comic_id " +
                                    "JOIN comic_characters com_cha on com.comic_id = com_cha.comic_id " +
                                    "JOIN characters cha ON com_cha.character_id = cha.character_id " +
-                                   "GROUP BY cha.character_id, cha.name;";
+                                   "GROUP BY cha.character_id, cha.name " +
+                                   "ORDER BY count DESC;";
 
                     SqlCommand cmd = new SqlCommand(query, conn);
                     SqlDataReader reader = cmd.ExecuteReader();

@@ -15,9 +15,11 @@
       </v-col>
       <v-col>
         <collection-display
+          v-if="collections.length > 0"
           @delete="deleteComic"
           :addComic="() => (addDialog = !addDialog)"
           :comics="comics"
+          :selectedCollection="selectedCollection"
         />
       </v-col>
     </v-row>
@@ -54,6 +56,9 @@ export default {
       CollectionService.addCollection(newCollection).then((response) => {
         if (response.status === 201) {
           this.collections.push(response.data);
+          if (this.collections.length === 1) {
+            this.selectedCollection = response.data;
+          }
         }
       });
     },
