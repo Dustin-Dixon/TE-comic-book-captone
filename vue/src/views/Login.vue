@@ -23,11 +23,7 @@
           <v-text-field autofocus label="Username" v-model="user.username" />
         </v-col>
         <v-col cols="5">
-          <v-text-field
-            label="Password"
-            v-model="user.password"
-            type="password"
-          />
+          <password-field label="Password" :value.sync="user.password" />
         </v-col>
       </v-row>
       <v-row>
@@ -45,9 +41,11 @@
 <script>
 import authService from "../services/AuthService";
 
+import PasswordField from "../components/FormInputs/PasswordField";
+
 export default {
   name: "login",
-  components: {},
+  components: { PasswordField },
   data() {
     return {
       user: {

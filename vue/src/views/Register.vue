@@ -21,17 +21,12 @@
       </v-row>
       <v-row>
         <v-col cols="5" offset="1">
-          <v-text-field
-            label="Password"
-            v-model="user.password"
-            type="password"
-          />
+          <password-field label="Password" :value.sync="user.password" />
         </v-col>
         <v-col cols="5">
-          <v-text-field
+          <password-field
             label="Confirm Password"
-            v-model="user.confirmPassword"
-            type="password"
+            :value.sync="user.confirmPassword"
           />
         </v-col>
       </v-row>
@@ -51,8 +46,13 @@
 <script>
 import authService from "../services/AuthService";
 
+import PasswordField from "../components/FormInputs/PasswordField";
+
 export default {
   name: "register",
+  components: {
+    PasswordField,
+  },
   data() {
     return {
       user: {
