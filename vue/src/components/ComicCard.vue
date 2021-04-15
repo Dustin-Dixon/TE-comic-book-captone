@@ -5,7 +5,7 @@
     <div class="text-center">{{ comic.name }} #{{comic.issueNumber}}</div>
     </v-card-text> -->
 
-    <comic-detail @delete="$emit('delete', $event)" :comic="comic" v-if="showInfo" :showRemove="showRemove" />
+    <comic-detail @add-tag="$emit('add-tag', $event)" @delete="$emit('delete', $event)" :comic="comic" v-if="showInfo" :showRemove="showRemove" />
   </v-card>
 </template>
 

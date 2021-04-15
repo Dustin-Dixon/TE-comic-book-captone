@@ -17,12 +17,22 @@
         <div>Cover Date: {{ comic.coverDate }}</div>
         <div v-if="comic.creators">Creators: {{ creatorList }}</div>
         <div v-if="comic.characters">Characters: {{ characterList }}</div>
+        <v-row v-if="comic.tags">
+          <div v-for="tag in comic.tags" :key="tag.id">
+            <v-chip primary class="ma-2">{{ tag.description }}</v-chip>
+          </div>
+        </v-row>
       </v-card-text>
       <v-card-actions>
-        <v-btn v-if="showRemove" @click="$emit('delete', comic)"
+        <v-btn text :href="comic.siteDetailUrl">Get More Info</v-btn>
+        <v-btn text v-if="showRemove" @click="$emit('delete', comic)"
           >Remove Comic</v-btn
         >
-        <tag-dialog v-if="showRemove" :comic="comic" />
+        <tag-dialog
+          @add-tag="$emit('add-tag', $event)"
+          v-if="showRemove"
+          :comic="comic"
+        />
       </v-card-actions>
     </v-card>
   </v-menu>
@@ -66,10 +76,10 @@ export default {
     },
     characterList() {
       return this.makeStringOfNames(this.comic.characters);
-    }
+    },
   },
   methods: {
-    makeStringOfNames(arrayToFilter){
+    makeStringOfNames(arrayToFilter) {
       return arrayToFilter.reduce((acc, object, i) => {
         if (i === 0) {
           return object.name;
@@ -77,7 +87,7 @@ export default {
           return `${acc}, ${object.name}`;
         }
       }, "");
-    }
-  }
+    },
+  },
 };
 </script>
