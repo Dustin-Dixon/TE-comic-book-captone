@@ -7,7 +7,7 @@
         <h5 class="text-h4 text-center mb-2">By: {{ collection.username }}</h5>
       </v-col>
     </v-row>
-    <collection-display :comics="comics" :showRemove="false" />
+    <collection-display :selectedCollection="collection" :comics="comics" :showRemove="false" />
   </v-container>
 </template>
 

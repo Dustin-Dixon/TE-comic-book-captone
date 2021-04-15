@@ -19,6 +19,7 @@
           @delete="deleteComic"
           :addComic="() => (addDialog = !addDialog)"
           :comics="comics"
+          :selectedCollection="selectedCollection"
         />
       </v-col>
     </v-row>
