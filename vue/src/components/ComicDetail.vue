@@ -16,6 +16,7 @@
         <div>Issue Number: {{ comic.issueNumber }}</div>
         <div>Cover Date: {{ comic.coverDate }}</div>
         <div v-if="comic.creators">Creators: {{ creatorList }}</div>
+        <div v-if="comic.characters">Characters: {{ characterList }}</div>
       </v-card-text>
       <v-card-actions>
         <v-btn v-if="showRemove" @click="$emit('delete', comic)"
@@ -61,14 +62,22 @@ export default {
       }
     },
     creatorList() {
-      return this.comic.creators.reduce((acc, creator, i) => {
+      return this.makeStringOfNames(this.comic.creators);
+    },
+    characterList() {
+      return this.makeStringOfNames(this.comic.characters);
+    }
+  },
+  methods: {
+    makeStringOfNames(arrayToFilter){
+      return arrayToFilter.reduce((acc, object, i) => {
         if (i === 0) {
-          return creator.name;
+          return object.name;
         } else {
-          return `${acc}, ${creator.name}`;
+          return `${acc}, ${object.name}`;
         }
       }, "");
-    },
-  },
+    }
+  }
 };
 </script>
