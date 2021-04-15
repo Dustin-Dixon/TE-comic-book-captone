@@ -11,6 +11,12 @@
         large
         ><v-img src="../public/power_comics_icon.png" height="40px" contain
       /></v-btn>
+      <v-btn :to="{ name: 'site-statistics' }" class="text-nav" text
+        >Site Comic Statistics</v-btn
+      >
+      <v-btn :to="{ name: 'about-us' }" class="text-nav" text>About Us</v-btn>
+      <v-spacer />
+      <v-spacer />
       <v-btn
         :to="{ name: 'my-collections' }"
         class="text-nav"
@@ -18,18 +24,6 @@
         v-if="loggedIn"
         >Collections</v-btn
       >
-      <v-btn
-        :to="{ name: 'site-statistics' }"
-        class="text-nav"
-        text
-        >Site Comic Statistics</v-btn
-        >
-      <v-btn
-        :to="{ name: 'about-us' }"
-        class="text-nav"
-        text
-        >About Us</v-btn
-        >
       <v-spacer />
       <v-btn :to="{ name: 'register' }" class="text-nav" text v-if="!loggedIn">
         Sign Up
