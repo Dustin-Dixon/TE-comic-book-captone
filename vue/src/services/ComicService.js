@@ -7,4 +7,7 @@ export default {
     searchOnline(name, description) {
         return axios.get(`/search/issues?name=${name}&description=${description}`);
     },
+    addTagToComic(comicID, tag) {
+        return axios.post(`/user/comic/${comicID}`, tag);
+    }
 }
