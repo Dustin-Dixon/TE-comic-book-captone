@@ -109,10 +109,11 @@ namespace Capstone.Controllers
             }
         }
 
-        [HttpGet("collection/{id}/stats")]
+        [HttpGet("/collection/{id}/stats")]
         public ActionResult<Statistics> GetCollectionStatistics(int id)
         {
-            if (VerifyActiveUserOwnsCollection(id))
+            Collection collection = collectionDAO.GetSingleCollection(id);
+            if (collection.Public || VerifyActiveUserOwnsCollection(id))
             {
                 Statistics stats = new Statistics()
                 {
@@ -124,7 +125,7 @@ namespace Capstone.Controllers
             }
             else
             {
-                return Unauthorized(new { message = "Not owner of collection" });
+                return Unauthorized(new { message = "Not Authorized" });
             }
         }
 

@@ -147,7 +147,8 @@ namespace Capstone.DAO
                                    "JOIN comic_creators_contributions cre_con on com.comic_id = cre_con.comic_id " +
                                    "JOIN comic_creators cre ON cre_con.creator_id = cre.creator_id " +
                                    "WHERE col.collection_id = @collectionId " +
-                                   "GROUP BY cre.creator_id, cre.name;";
+                                   "GROUP BY cre.creator_id, cre.name " +
+                                   "ORDER BY count DESC;";
 
                     SqlCommand cmd = new SqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@collectionId", collectionId);
@@ -184,7 +185,8 @@ namespace Capstone.DAO
                                    "JOIN collections_comics col on com.comic_id = col.comic_id " +
                                    "JOIN comic_creators_contributions cre_con on com.comic_id = cre_con.comic_id " +
                                    "JOIN comic_creators cre ON cre_con.creator_id = cre.creator_id " +
-                                   "GROUP BY cre.creator_id, cre.name;";
+                                   "GROUP BY cre.creator_id, cre.name " +
+                                   "ORDER BY count DESC;";
 
                     SqlCommand cmd = new SqlCommand(query, conn);
                     SqlDataReader reader = cmd.ExecuteReader();
