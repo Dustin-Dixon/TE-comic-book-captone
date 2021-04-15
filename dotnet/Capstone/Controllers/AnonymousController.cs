@@ -35,11 +35,15 @@ namespace Capstone.Controllers
             return Ok(allPublicCollections);
         }
 
-        [HttpGet("collection/statistics")]
-        public ActionResult<int> GetNumberOfComicsInCollections()
+        [HttpGet("stats")]
+        public ActionResult<Statistics> GetNumberOfComicsInCollections()
         {
-            int overallNumber = collectionDAO.GetCountOfComicsInAllCollections();
-            return Ok(overallNumber);
+            return Ok(new Statistics()
+            {
+                ComicCount = collectionDAO.GetCountOfComicsInAllCollections(),
+                Characters = characterDAO.GetTotalCollectionCharacterCount(),
+                Creators = creatorDAO.GetTotalCollectionCreatorCount(),
+            });
         }
 
         [HttpGet("collection/{id}/stats")]
@@ -50,7 +54,9 @@ namespace Capstone.Controllers
             {
                 Statistics stats = new Statistics()
                 {
-                    Characters = characterDAO.GetCollectionCharacterCount(id)
+                    ComicCount = collectionDAO.GetCountOfComicsInCollection(id),
+                    Characters = characterDAO.GetCollectionCharacterCount(id),
+                    Creators = creatorDAO.GetCollectionCreatorCount(id),
                 };
                 return Ok(stats);
             }

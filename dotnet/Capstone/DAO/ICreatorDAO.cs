@@ -1,8 +1,6 @@
-﻿using System;
+﻿using Capstone.Models;
+using Capstone.Models.Stats;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Capstone.Models;
 
 namespace Capstone.DAO
 {
@@ -12,5 +10,7 @@ namespace Capstone.DAO
         public bool LinkCreatorToComic(int creatorId, int comicId);
         public List<Creator> GetComicCreators(int comicId);
         public void CheckDatabaseForCreators(List<Creator> creators);
+        public List<CreatorCount> GetCollectionCreatorCount(int collectionId);
+        public List<CreatorCount> GetTotalCollectionCreatorCount();
     }
 }

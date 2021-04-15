@@ -12,5 +12,6 @@ namespace Capstone.DAO
         public void CheckDatabaseForCharacters(List<Character> characters);
         public List<Character> GetCharacterListForComicBook(int comicId);
         public List<CharacterCount> GetCollectionCharacterCount(int collectionId);
+        public List<CharacterCount> GetTotalCollectionCharacterCount();
     }
 }

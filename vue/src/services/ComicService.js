@@ -9,5 +9,8 @@ export default {
     },
     addTagToComic(comicID, tag) {
         return axios.post(`/user/comic/${comicID}`, tag);
+    },
+    getAllTags() {
+        return axios.get(`/tag`);
     }
 }

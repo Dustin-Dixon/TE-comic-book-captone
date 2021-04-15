@@ -1,4 +1,5 @@
 ﻿using Capstone.Models;
+using Capstone.Models.Stats;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -131,8 +132,80 @@ namespace Capstone.DAO
             };
             return c;
         }
+        public List<CreatorCount> GetCollectionCreatorCount(int collectionId)
+        {
+            List<CreatorCount> creatorStats = new List<CreatorCount>();
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    string query = "SELECT cre.creator_id, cre.name, COUNT(cre.creator_id) AS count from comics com " +
+                                   "JOIN collections_comics col on com.comic_id = col.comic_id " +
+                                   "JOIN comic_creators_contributions cre_con on com.comic_id = cre_con.comic_id " +
+                                   "JOIN comic_creators cre ON cre_con.creator_id = cre.creator_id " +
+                                   "WHERE col.collection_id = @collectionId " +
+                                   "GROUP BY cre.creator_id, cre.name;";
+
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@collectionId", collectionId);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        creatorStats.Add(new CreatorCount()
+                        {
+                            Creator = GetCreatorFromReader(reader),
+                            Count = Convert.ToInt32(reader["count"])
+                        });
+                    }
+                }
+            }
+            catch (SqlException)
+            {
+                throw;
+            }
+
+            return creatorStats;
+        }
+        public List<CreatorCount> GetTotalCollectionCreatorCount()
+        {
+            List<CreatorCount> creatorStats = new List<CreatorCount>();
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    string query = "SELECT cre.creator_id, cre.name, COUNT(cre.creator_id) AS count from comics com " +
+                                   "JOIN collections_comics col on com.comic_id = col.comic_id " +
+                                   "JOIN comic_creators_contributions cre_con on com.comic_id = cre_con.comic_id " +
+                                   "JOIN comic_creators cre ON cre_con.creator_id = cre.creator_id " +
+                                   "GROUP BY cre.creator_id, cre.name;";
+
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        creatorStats.Add(new CreatorCount()
+                        {
+                            Creator = GetCreatorFromReader(reader),
+                            Count = Convert.ToInt32(reader["count"])
+                        });
+                    }
+                }
+            }
+            catch (SqlException)
+            {
+                throw;
+            }
+
+            return creatorStats;
+        }
+
     }
-
-
-    
 }
