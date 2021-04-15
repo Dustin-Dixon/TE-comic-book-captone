@@ -12,6 +12,7 @@
       <v-col cols="3" v-for="comic in comics" :key="comic.id">
         <comic-card
           @delete="$emit('delete', $event)"
+          @add-tag="comic.tags.push($event)"
           :comic="comic"
           :height="cardHeight"
           :showInfo="showInfo"

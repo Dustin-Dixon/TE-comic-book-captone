@@ -40,7 +40,7 @@ export default {
         (response) => {
           console.log(response);
           if (response.status === 201) {
-              console.log(response.data);
+              this.$emit("add-tag", response.data);
           }
         }
       );
