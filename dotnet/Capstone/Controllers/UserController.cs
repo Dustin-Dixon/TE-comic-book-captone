@@ -19,8 +19,9 @@ namespace Capstone.Controllers
         private readonly IComicVineService comicVine;
         private readonly ICharacterDAO characterDAO;
         private readonly ICreatorDAO creatorDAO;
+        private readonly ITagDAO tagDAO;
 
-        public UserController(ICollectionDAO collectionDAO, IComicDAO comicDAO, IComicVineService comicVine, IUserDAO userDAO, ICharacterDAO characterDAO, ICreatorDAO creatorDAO)
+        public UserController(ICollectionDAO collectionDAO, IComicDAO comicDAO, IComicVineService comicVine, IUserDAO userDAO, ICharacterDAO characterDAO, ICreatorDAO creatorDAO, ITagDAO tagDAO)
         {
             this.collectionDAO = collectionDAO;
             this.comicDAO = comicDAO;
@@ -28,6 +29,7 @@ namespace Capstone.Controllers
             this.userDAO = userDAO;
             this.characterDAO = characterDAO;
             this.creatorDAO = creatorDAO;
+            this.tagDAO = tagDAO;
         }
         private int GetUserIdFromToken()
         {
@@ -280,6 +282,45 @@ namespace Capstone.Controllers
             }
         }
 
+        [HttpGet("comic/{id}")]
+        public ActionResult<List<TagCount>> GetCountOfAllTags()
+        {
+            List<TagCount> tagCountList = new List<TagCount>();
+
+            return tagCountList;
+        }
+
+        [HttpPost("comic/{id}")]
+        public ActionResult<Tag> AddTagToComic(int id, Tag tag)
+        {
+            string description = FormatStringForSql(tag.Description);
+            Tag exists = tagDAO.DoesTagExist(description);
+
+            if (exists == null)
+            {
+                exists = tagDAO.AddTagToDatabase(description);
+            }
+            if (!tagDAO.IsTagLinkedToComic(id, exists.Id))
+            {
+                bool isSuccessful = tagDAO.LinkTagToComic(id, exists.Id);
+                if (!isSuccessful)
+                {
+                    return BadRequest(new { message = "Failed to add tag to comic" });
+                }
+                return Created($"/user/comic/{id}", exists);
+            }
+            else
+            {
+                return BadRequest(new { message = "Comic already has that tag" });
+            }
+
+        }
+
+        private string FormatStringForSql(string description)
+        {
+            description = description.ToLower().Trim();
+            return description;
+        }
     }
 
 }

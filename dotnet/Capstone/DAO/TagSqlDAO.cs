@@ -16,9 +16,9 @@ namespace Capstone.DAO
             connectionString = dbConnectionString;
         }
 
-        public bool AddTagToDatabase(string description)
+        public Tag AddTagToDatabase(string description)
         {
-            int isSuccessful = -1;
+            int tagId = -1;
 
             try
             {
@@ -27,16 +27,22 @@ namespace Capstone.DAO
                     conn.Open();
 
                     SqlCommand cmd = new SqlCommand("INSERT INTO tags (tag_description) " +
-                                                    "VALUES(@description);", conn);
+                                                    "VALUES(@description);" +
+                                                    "SELECT SCOPE_IDENTITY();", conn);
                     cmd.Parameters.AddWithValue("@description", description);
-                    isSuccessful = cmd.ExecuteNonQuery();
+                    tagId = Convert.ToInt32(cmd.ExecuteScalar());
                 }
             }
             catch (SqlException)
             {
                 throw;
             }
-            return (isSuccessful == 1);
+            Tag tag = new Tag
+            {
+                Id = tagId,
+                Description = description
+            };
+            return tag;
         }
 
         public bool LinkTagToComic(int comicId, int tagId)
@@ -49,10 +55,10 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("INSERT INTO tags (comic_id, tag_id) " +
-                                                    "VALUES(@comic_id, @tag_id);", conn);
-                    cmd.Parameters.AddWithValue("@comic_id", comicId);
+                    SqlCommand cmd = new SqlCommand("INSERT INTO comic_tags (tag_id, comic_id) " +
+                                                    "VALUES(@tag_id, @comic_id);", conn);
                     cmd.Parameters.AddWithValue("@tag_id", tagId);
+                    cmd.Parameters.AddWithValue("@comic_id", comicId);
                     isSuccessful = cmd.ExecuteNonQuery();
                 }
             }
@@ -63,28 +69,23 @@ namespace Capstone.DAO
             return (isSuccessful == 1);
         }
 
-        public bool DoesTagExist(int tagId)
+        public Tag DoesTagExist(string description)
         {
-            int exists = -1;
+            Tag tag = null;
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("SELECT tag_id " +
+                    SqlCommand cmd = new SqlCommand("SELECT tag_id, tag_description " +
                                                     "FROM tags " +
-                                                    "WHERE tag_id = @tag_id;", conn);
-                    cmd.Parameters.AddWithValue("@tag_id", tagId);
-                    object result = cmd.ExecuteScalar();
-
-                    if (Convert.IsDBNull(result))
+                                                    "WHERE tag_description = @tag_description;", conn);
+                    cmd.Parameters.AddWithValue("@tag_description", description);
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    if (reader.Read())
                     {
-                        exists = 0;
-                    }
-                    else
-                    {
-                        exists = Convert.ToInt32(result);
+                        tag = GetTagFromReader(reader);
                     }
                 }
             }
@@ -93,7 +94,7 @@ namespace Capstone.DAO
                 throw;
             }
 
-            return (exists == 1);
+            return tag;
         }
 
         public bool IsTagLinkedToComic(int comicId, int tagId)
@@ -140,7 +141,7 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("SELECT tag_id " +
+                    SqlCommand cmd = new SqlCommand("SELECT tag_id, tag_description " +
                                                     "FROM tags " +
                                                     "WHERE tag_id = @tag_id;", conn);
                     cmd.Parameters.AddWithValue("@tag_id", tagId);
@@ -192,7 +193,7 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("SELECT quantity " +
+                    SqlCommand cmd = new SqlCommand("SELECT SUM(quantity) " +
                                                     "FROM collections_comics cc " +
                                                     "INNER JOIN comics c ON c.comic_id = cc.comic_id " +
                                                     "INNER JOIN comic_tags ct ON ct.tag_id = t.tag_id " +
