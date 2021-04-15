@@ -8,6 +8,7 @@ import Register from '../views/Register.vue'
 import store from '../store/index'
 import PublicCollection from '../views/PublicCollection.vue'
 import AboutUs from '../views/AboutUs.vue'
+import SiteStatistics from '../views/SiteStatistics.vue'
 
 Vue.use(Router)
 
@@ -76,6 +77,14 @@ const router = new Router({
       path: "/about-us",
       name: "about-us",
       component: AboutUs,
+      meta: {
+        requiresAuth: false
+      }
+    },
+    {
+      path: "/site-statistics",
+      name: "site-statistics",
+      component: SiteStatistics,
       meta: {
         requiresAuth: false
       }

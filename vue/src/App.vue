@@ -19,6 +19,12 @@
         >Collections</v-btn
       >
       <v-btn
+        :to="{ name: 'site-statistics' }"
+        class="text-nav"
+        text
+        >Site Comic Statistics</v-btn
+        >
+      <v-btn
         :to="{ name: 'about-us' }"
         class="text-nav"
         text
