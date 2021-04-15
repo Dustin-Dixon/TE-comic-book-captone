@@ -102,7 +102,7 @@ CREATE TABLE comic_characters (
 );
 
 CREATE TABLE tags (
-	tag_id int NOT NULL,
+	tag_id int IDENTITY(1,1) NOT NULL,
 	tag_description varchar (100) NOT NULL,
 	CONSTRAINT PK_tags PRIMARY KEY (tag_id)
 );
