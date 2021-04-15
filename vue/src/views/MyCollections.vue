@@ -54,6 +54,9 @@ export default {
       CollectionService.addCollection(newCollection).then((response) => {
         if (response.status === 201) {
           this.collections.push(response.data);
+          if (this.collections.length === 1) {
+            this.selectedCollection = response.data;
+          }
         }
       });
     },
