@@ -38,7 +38,7 @@ namespace Capstone.Controllers
         }
 
         [HttpGet("stats")]
-        public ActionResult<Statistics> GetNumberOfComicsInCollections()
+        public ActionResult<Statistics> GetTotalStatistics()
         {
             return Ok(new Statistics()
             {
@@ -49,7 +49,7 @@ namespace Capstone.Controllers
         }
 
         [HttpGet("collection/{id}/stats")]
-        public ActionResult<Statistics> GetCollectionCharacterCount(int id)
+        public ActionResult<Statistics> GetPublicCollectionStatistics(int id)
         {
             Collection collection = collectionDAO.GetSingleCollection(id);
             if (collection.Public)
