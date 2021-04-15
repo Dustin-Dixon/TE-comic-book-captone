@@ -15,11 +15,11 @@
       <v-card-text>
         <div>Issue Number: {{ comic.issueNumber }}</div>
         <div>Cover Date: {{ comic.coverDate }}</div>
-        <div v-if="comic.creators">Creators: {{ creatorList }}</div>
-        <div v-if="comic.characters">Characters: {{ characterList }}</div>
-        <v-row v-if="comic.tags">
+        <div v-if="Array.isArray(comic.creators) && comic.creators.length > 0">Creators: {{ creatorList }}</div>
+        <div v-if="Array.isArray(comic.characters) && comic.characters.length > 0">Characters: {{ characterList }}</div>
+        <v-row class="mt-1" v-if="Array.isArray(comic.tags) && comic.tags.length > 0">
           <div v-for="tag in comic.tags" :key="tag.id">
-            <v-chip primary class="ma-2">{{ tag.description }}</v-chip>
+            <v-chip color="primary" class="ma-2">{{ tag.description }}</v-chip>
           </div>
         </v-row>
       </v-card-text>

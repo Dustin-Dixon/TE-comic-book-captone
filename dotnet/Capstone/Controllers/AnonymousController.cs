@@ -44,6 +44,7 @@ namespace Capstone.Controllers
             {
                 ComicCount = collectionDAO.GetCountOfComicsInAllCollections(),
                 Characters = characterDAO.GetTotalCollectionCharacterCount(),
+                Creators = creatorDAO.GetTotalCollectionCreatorCount(),
             });
         }
 
@@ -56,7 +57,8 @@ namespace Capstone.Controllers
                 Statistics stats = new Statistics()
                 {
                     ComicCount = collectionDAO.GetCountOfComicsInCollection(id),
-                    Characters = characterDAO.GetCollectionCharacterCount(id)
+                    Characters = characterDAO.GetCollectionCharacterCount(id),
+                    Creators = creatorDAO.GetCollectionCreatorCount(id),
                 };
                 return Ok(stats);
             }
