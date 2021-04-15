@@ -40,7 +40,25 @@ namespace Capstone.Controllers
         {
             int overallNumber = collectionDAO.GetCountOfComicsInAllCollections();
             return Ok(overallNumber);
-        } 
+        }
+
+        [HttpGet("collection/{id}/stats")]
+        public ActionResult<Statistics> GetCollectionCharacterCount(int id)
+        {
+            Collection collection = collectionDAO.GetSingleCollection(id);
+            if (collection.Public)
+            {
+                Statistics stats = new Statistics()
+                {
+                    Characters = characterDAO.GetCollectionCharacterCount(id)
+                };
+                return Ok(stats);
+            }
+            else
+            {
+                return Unauthorized(new { message = "The collection is private" });
+            }
+        }
 
         [HttpGet("collection/{id}/comic")]
         public ActionResult<List<ComicBook>> ComicsInPublicCollection(int id)
