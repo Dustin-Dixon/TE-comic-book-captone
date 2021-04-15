@@ -26,7 +26,7 @@
         </v-row>
       </v-card-text>
       <v-card-actions>
-        <v-btn text :href="comic.siteDetailUrl">Get More Info</v-btn>
+        <v-btn text :href="comic.siteDetailUrl" target="_blank">Get More Info</v-btn>
         <v-btn text v-if="showRemove" @click="$emit('delete', comic)"
           >Remove Comic</v-btn
         >
