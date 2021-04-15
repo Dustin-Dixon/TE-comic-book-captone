@@ -69,7 +69,7 @@ namespace Capstone.DAO
             return (isSuccessful == 1);
         }
 
-        public Tag DoesTagExist(string description)
+        public Tag GetTagByDescription(string description)
         {
             Tag tag = null;
             try
@@ -132,23 +132,24 @@ namespace Capstone.DAO
             return (exists == 1);
         }
 
-        public Tag GetTag(int tagId)
+        public List<Tag> GetTagListForComicBook(int comicId)
         {
-            Tag tag = new Tag();
+            List<Tag> tags = new List<Tag>();
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("SELECT tag_id, tag_description " +
-                                                    "FROM tags " +
-                                                    "WHERE tag_id = @tag_id;", conn);
-                    cmd.Parameters.AddWithValue("@tag_id", tagId);
+                    SqlCommand cmd = new SqlCommand("SELECT t.tag_id, t.tag_description " +
+                                                    "FROM tags t " +
+                                                    "INNER JOIN comic_tags ct ON ct.tag_id = t.tag_id " +
+                                                    "WHERE ct.comic_id = @comic_id;", conn);
+                    cmd.Parameters.AddWithValue("@comic_id", comicId);
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
-                        tag = GetTagFromReader(reader);
+                        tags.Add(GetTagFromReader(reader));
                     }
                 }
             }
@@ -156,7 +157,7 @@ namespace Capstone.DAO
             {
                 throw;
             }
-            return tag;
+            return tags;
         }
 
         public List<Tag> GetAllTags()
@@ -193,11 +194,11 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("SELECT SUM(quantity) " +
+                    SqlCommand cmd = new SqlCommand("SELECT COUNT(quantity) " +
                                                     "FROM collections_comics cc " +
                                                     "INNER JOIN comics c ON c.comic_id = cc.comic_id " +
-                                                    "INNER JOIN comic_tags ct ON ct.tag_id = t.tag_id " +
-                                                    "WHERE t.tag_id = @tag_id;", conn);
+                                                    "INNER JOIN comic_tags ct ON ct.comic_id = c.comic_id " +
+                                                    "WHERE ct.tag_id = @tag_id;", conn);
                     cmd.Parameters.AddWithValue("@tag_id", tagId);
                     object result = cmd.ExecuteScalar();
 

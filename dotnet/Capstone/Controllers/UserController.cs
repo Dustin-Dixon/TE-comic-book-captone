@@ -96,6 +96,7 @@ namespace Capstone.Controllers
                 {
                     comic.Characters = characterDAO.GetCharacterListForComicBook(comic.Id);
                     comic.Creators = creatorDAO.GetComicCreators(comic.Id);
+                    comic.Tags = tagDAO.GetTagListForComicBook(comic.Id);
                 }
                 return Ok(comicsInCollection);
             }
@@ -282,11 +283,21 @@ namespace Capstone.Controllers
             }
         }
 
-        [HttpGet("comic/{id}")]
+        [HttpGet("/tag")]
         public ActionResult<List<TagCount>> GetCountOfAllTags()
         {
             List<TagCount> tagCountList = new List<TagCount>();
-
+            List<Tag> allTags = tagDAO.GetAllTags();
+            foreach (Tag tag in allTags)
+            {
+                int count = tagDAO.GetCountOfTagAcrossDatabase(tag.Id);
+                TagCount tagCount = new TagCount
+                {
+                    Description = tag.Description,
+                    Count = count
+                };
+                tagCountList.Add(tagCount);
+            }
             return tagCountList;
         }
 
@@ -294,7 +305,7 @@ namespace Capstone.Controllers
         public ActionResult<Tag> AddTagToComic(int id, Tag tag)
         {
             string description = FormatStringForSql(tag.Description);
-            Tag exists = tagDAO.DoesTagExist(description);
+            Tag exists = tagDAO.GetTagByDescription(description);
 
             if (exists == null)
             {
