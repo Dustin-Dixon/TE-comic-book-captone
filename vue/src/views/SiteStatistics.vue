@@ -1,20 +1,23 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <v-row>
       <v-col align="center">
-        <v-content class="text-h3"> Total Comics by Tags </v-content>
+        <h1 class="text-h3"> Total Comics by Tag </h1>
       </v-col>
     </v-row>
+    <v-divider class="my-4" />
     <v-row>
-        <v-col align="center">
-            <v-content class="text-h6" v-for="tagCount in firstHalfTags" :key="tagCount.description">
-                {{tagCount.count}} {{tagCount.description}} {{PluralOrNot(tagCount.count)}}
-            </v-content>
+        <v-col cols="4" offset="2" align="center">
+            <div v-for="tagCount in firstHalfTags" :key="tagCount.description">
+                <p class="text-h6">{{tagCount.description}} {{PluralOrNot(tagCount.count)}}</p>
+                <p class="text-nav">{{tagCount.count}}</p>
+            </div>
         </v-col>
-        <v-col align="center">
-            <v-content class="text-h6" v-for="tagCount in secondHalfTags" :key="tagCount.description">
-                {{tagCount.count}} {{tagCount.description}} {{PluralOrNot(tagCount.count)}}
-            </v-content>
+        <v-col cols="4" align="center">
+            <div v-for="tagCount in secondHalfTags" :key="tagCount.description">
+                <p class="text-h6">{{tagCount.description}} {{PluralOrNot(tagCount.count)}}</p>
+                <p class="text-nav">{{tagCount.count}}</p>
+            </div>
         </v-col>
     </v-row>
   </v-container>
