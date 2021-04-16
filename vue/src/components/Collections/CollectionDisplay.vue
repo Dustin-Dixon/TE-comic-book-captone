@@ -1,13 +1,5 @@
 <template>
   <v-container>
-    <v-row v-if="addComic" align="center">
-      <v-col cols="9">
-        <v-divider />
-      </v-col>
-      <v-col cols="2">
-        <v-btn @click="addComic">Add Comic</v-btn>
-      </v-col>
-    </v-row>
     <v-row>
       <v-col cols="4" v-for="comic in comics" :key="comic.id">
         <comic-card
@@ -34,9 +26,6 @@ export default {
     comics: {
       type: Array,
       default: () => [],
-    },
-    addComic: {
-      type: Function,
     },
     showInfo: {
       type: Boolean,

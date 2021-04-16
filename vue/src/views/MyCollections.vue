@@ -5,6 +5,17 @@
         <h1 class="text-h1">My Collections</h1>
       </v-col>
     </v-row>
+    <v-row align="center">
+      <v-col cols="7">
+        <v-divider />
+      </v-col>
+      <v-col cols="2" class="text-center">
+        <v-btn @click="addDialog = true">Add Comic</v-btn>
+      </v-col>
+      <v-col>
+        <v-divider />
+      </v-col>
+    </v-row>
     <v-row>
       <v-col cols="3">
         <collection-list
@@ -17,7 +28,6 @@
         <collection-display
           v-if="collections.length > 0"
           @delete="deleteComic"
-          :addComic="() => (addDialog = !addDialog)"
           :comics="comics"
           :selectedCollection="selectedCollection"
         />
