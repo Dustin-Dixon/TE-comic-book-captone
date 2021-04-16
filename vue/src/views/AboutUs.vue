@@ -9,16 +9,29 @@
     <v-row align="start">
       <v-col cols="3">
         <v-img src="../assets/KatComic.png" max-height="200px" contain />
-        <v-divider class="mt-3" />
-        <h3 align="center" class="text-h3">Kat Kuntz</h3>
+<h3 align="center" class="text-h3">Kat Kuntz</h3>
         <v-divider class="my-2" />
-        <p align="center" class="text-h6">Info here</p>
-        <p align="center" class="text-h6">Info here</p>
-        <p align="center" class="text-h6">Info here</p>
-        <p align="center" class="text-h6">Info here</p>
-        <p align="center" class="text-h6">Info here</p>
+        <p align="center" class="text-h6">
+          Favorite Comic: <span class="text-nav">Batman</span>
+        </p>
+        <p align="center" class="text-h6">
+          Favorite Cereal: <span class="text-nav">Captain Crunch</span>
+        </p>
+        <p align="center" class="text-h6">
+          Bedtime: <span class="text-nav">Who needs sleep?</span>
+        </p>
+        <p align="center" class="text-h6">
+          Superpower: <span class="text-nav">Time Control</span>
+        </p>
+        <p align="center" class="text-h6">
+          Alias: <span class="text-nav">Codin' Cat</span>
+        </p>
         <div class="text-center">
-          <v-btn href="">LinkedIn</v-btn>
+          <v-btn
+            href="https://www.linkedin.com/in/kat-kuntz/"
+            class="mx-auto"
+            >LinkedIn</v-btn
+          >
         </div>
       </v-col>
       <v-divider vertical />
