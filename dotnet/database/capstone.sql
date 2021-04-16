@@ -55,7 +55,7 @@ CREATE TABLE volume_images (
 CREATE TABLE comics (
 	comic_id int NOT NULL,
 	name varchar(max) NOT NULL,
-	issue_number varchar (5) NOT NULL,
+	issue_number varchar (20) NOT NULL,
 	cover_date date NULL,
 	site_detail_url varchar (255) NOT NULL,
 	api_detail_url varchar (255) NOT NULL,
@@ -124,64 +124,3 @@ CREATE TABLE comic_tags (
 	CONSTRAINT FK_comic_tags_tag_id FOREIGN KEY (tag_id) REFERENCES tags (tag_id),
 	CONSTRAINT FK_comic_tags_comic_id FOREIGN KEY (comic_id) REFERENCES comics (comic_id)
 );
-
---------Users Row--------------------------------------
-
-SET IDENTITY_INSERT users ON;
-
-INSERT INTO users (user_id, username, password_hash, salt, user_role) VALUES (1, 'testuser', 'zZwpBoyj0/pvZkhSD35Gwm5e6yE=', 'tXjvMz9Q5eA=', 'standard');
-
-SET IDENTITY_INSERT users OFF;
-
---------Collections Rows-------------------------------
-
-SET IDENTITY_INSERT collections ON;
-
-INSERT INTO collections (collection_id, user_id, name, is_public) VALUES (1, 1, 'BatmanCollection', 0);
-INSERT INTO collections (collection_id, user_id, name, is_public) VALUES (2, 1, '"Marvel-ous" Collection', 1);
-
-SET IDENTITY_INSERT collections OFF;
-
---------Volume Rows------------------------------------
-
-INSERT INTO volumes (volume_id, name, publisher, api_detail_url, site_detail_url) VALUES (1, 'Test Volume', 'Test Publisher', 'API_DETAIL_URL', 'SITE_DETAIL_URL');
-
---------Volume Images----------------------------------
-
-INSERT INTO volume_images(volume_id, icon_url, small_url, medium_url, thumb_url) VALUES (1, 'ICON', 'SMALL', 'MEDIUM', 'THUMB');
-
---------Comics Rows------------------------------------
-
-INSERT INTO comics (comic_id, name, issue_number, cover_date, site_detail_url, api_detail_url, volume_id) VALUES (20596, 'Spiderman & Howard the Duck', '96', '1980-08-31', 'https://comicvine.gamespot.com/marvel-team-up-96-spiderman-howard-the-duck/4000-20596/', 'https://comicvine.gamespot.com/api/issue/4000-20596/', 1);
-INSERT INTO comics (comic_id, name, issue_number, cover_date, site_detail_url, api_detail_url, volume_id) VALUES (20736, 'Spiderman & Black Widow', '98', '1980-10-31', 'https://comicvine.gamespot.com/black-diamond-western-39/4000-11/', 'https://comicvine.gamespot.com/api/issue/4000-20736/', 1);
-INSERT INTO comics (comic_id, name, issue_number, cover_date, site_detail_url, api_detail_url, volume_id) VALUES (544648, 'Universo Spiderman', '1', '2015-07-31', 'https://comicvine.gamespot.com/100-marvel-spiderwoman-1-universo-spiderman/4000-544648/', 'https://comicvine.gamespot.com/api/issue/4000-544648/', 1);
-INSERT INTO comics (comic_id, name, issue_number, cover_date, site_detail_url, api_detail_url, volume_id) VALUES (4767, 'The Second Batman and Robin Team', '131', '1960-04-01', 'https://comicvine.gamespot.com/batman-131-the-second-batman-and-robin-team/4000-4767/', 'https://comicvine.gamespot.com/api/issue/4000-4767/', 1);
-
---------Comic_Images Rows------------------------------
-
-INSERT INTO comic_images (comic_id, icon_url, small_url, medium_url, thumb_url) VALUES (20596, 'https://comicvine1.cbsistatic.com/uploads/square_avatar/11/117763/2432782-marvelteam_up096.jpg', 'https://comicvine1.cbsistatic.com/uploads/scale_small/11/117763/2432782-marvelteam_up096.jpg', 'https://comicvine1.cbsistatic.com/uploads/scale_medium/11/117763/2432782-marvelteam_up096.jpg', 'https://comicvine1.cbsistatic.com/uploads/scale_avatar/11/117763/2432782-marvelteam_up096.jpg'); 
-INSERT INTO comic_images (comic_id, icon_url, small_url, medium_url, thumb_url) VALUES (20736, 'https://comicvine1.cbsistatic.com/uploads/square_avatar/11/117763/2432785-marvelteam_up098.jpg', 'https://comicvine1.cbsistatic.com/uploads/scale_small/11/117763/2432785-marvelteam_up098.jpg', 'https://comicvine1.cbsistatic.com/uploads/scale_medium/11/117763/2432785-marvelteam_up098.jpg', 'https://comicvine1.cbsistatic.com/uploads/scale_avatar/11/117763/2432785-marvelteam_up098.jpg');
-INSERT INTO comic_images (comic_id, icon_url, small_url, medium_url, thumb_url) VALUES (544648, 'https://comicvine1.cbsistatic.com/uploads/square_avatar/11112/111121983/5382348-8316246341-image_gallery', 'https://comicvine1.cbsistatic.com/uploads/scale_small/11112/111121983/5382348-8316246341-image_gallery', 'https://comicvine1.cbsistatic.com/uploads/scale_medium/11112/111121983/5382348-8316246341-image_gallery', 'https://comicvine1.cbsistatic.com/uploads/scale_avatar/11112/111121983/5382348-8316246341-image_gallery');
-INSERT INTO comic_images (comic_id, icon_url, small_url, medium_url, thumb_url) VALUES (4767, 'https://comicvine1.cbsistatic.com/uploads/square_avatar/0/4/4357-796-4767-1-batman.jpg', 'https://comicvine1.cbsistatic.com/uploads/scale_small/0/4/4357-796-4767-1-batman.jpg', 'https://comicvine1.cbsistatic.com/uploads/scale_medium/0/4/4357-796-4767-1-batman.jpg', 'https://comicvine1.cbsistatic.com/uploads/scale_avatar/0/4/4357-796-4767-1-batman.jpg');
-
---------Collections_comics Rows------------------------
-
-
-INSERT INTO collections_comics (collection_id, comic_id, quantity) VALUES (2, 20596, 2);
-INSERT INTO collections_comics (collection_id, comic_id, quantity) VALUES (2, 20736, 1);
-INSERT INTO collections_comics (collection_id, comic_id, quantity) VALUES (2, 544648, 1);
-INSERT INTO collections_comics (collection_id, comic_id, quantity) VALUES (1, 4767, 1);
-
-
---------Comic_creator Rows-----------------------------
-
-INSERT INTO comic_creators (creator_id, name) VALUES (1, 'Stan Lee');
-INSERT INTO comic_creators (creator_id, name) VALUES (2, 'LeBron James');
-
-
---------Comic_creator_contributions Rows---------------
-
-INSERT INTO comic_creators_contributions (comic_id,creator_id) VALUES(20596,1);
-INSERT INTO comic_creators_contributions (comic_id,creator_id) VALUES(20736,1);
-INSERT INTO comic_creators_contributions (comic_id,creator_id) VALUES(544648,1);
-INSERT INTO comic_creators_contributions (comic_id,creator_id) VALUES(4767,2);
